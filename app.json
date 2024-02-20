@@ -1,7 +1,7 @@
 {
-    "name": "𝚜𝚘𝚞𝚛𝚜 𝚊𝚏𝚛𝚘𝚝𝚘𝚘 ",
+    "name": "『 𝚂𝙾𝚄𝚁𝚂 𝙺𝙸𝙽𝙶 』",
     "description": "A Telegram Music Player Bot, written in Python with Pyrogram and Py-Tgcalls.",
-    "logo": "https://telegra.ph/file/04b2f1f1c808dc49db35b.jpg",
+    "logo": "https://telegra.ph/file/1a77a02bdb06d55051845.jpg",
     "keywords": [
     "python3",
     "telegram",
@@ -13,27 +13,27 @@
     ],
     "env": {
       "API_ID": {
-        "description": "Get this value from https://my.telegram.org",
+        "description": "هنا ضع الايبي ايدي https://my.telegram.org",
         "value": "",
         "required": true
       },
       "API_HASH": {
-        "description": "Get this value from https://my.telegram.org",
+        "description": "هنا ضع الايبي هاش https://my.telegram.org",
         "value": "",
         "required": true
       },
       "BOT_TOKEN": {
-        "description": "A Bot's token from Botfather",
+        "description": "ضع هنا تكون البوت الذي صنعته من @BotFather.",
         "value": "",
         "required": true
       },
       "MONGO_DB_URI": {
         "description": "Get a mongodb url from https://cloud.mongodb.com.",
-        "value": "mongodb+srv://bot_vambir:Al2552001@cluster0.heabj.mongodb.net/vambir_bot?retryWrites=true&w=majority",
+        "value": "",
         "required": true
       },
       "OWNER_ID": {
-        "description": "The user id of user whom you would like to add as OWNER.",
+        "description": "ايدي المستخدم الذي ترغب في إضافته كمالك",
         "value": "",
         "required": true
       },
@@ -54,7 +54,7 @@
         "required": false
       },
       "LOGGER_ID": {
-        "description": "Your Log Group ID, add your bot and promote as an admin with full rights!. Channel ki id mat daal dena bsdk.",
+        "description": "معرف مجموعة السجل الخاص بك، أضف البوت الخاص بك والحساب المساعد وقم برفعهم ادمن بكل الصلاحيات!.",
         "value": "",
         "required": true
       }
