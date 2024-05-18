@@ -57,6 +57,9 @@ async def send_hms(client, message):
             "from_id": from_id
         }
 
+        # Delete the user s whisper message after receiving it
+        await app.delete_messages(chat_id=message.chat.id, message_ids=[message.id])
+
         await message.reply_text("• تم ارسال همستك بنجاح √")
 
         sent_message = await app.send_message(
