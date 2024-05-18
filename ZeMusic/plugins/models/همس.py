@@ -18,7 +18,7 @@ async def reply_with_link(client, message):
             [InlineKeyboardButton("اهمس هنا", url=start_link)]
         ]
     )
-    
+
     # Cancel the previous whisper prompt message if exists
     if (my_id, bar_id) in hms_messages:
         await app.delete_messages(chat_id=bar_id, message_ids=hms_messages[(my_id, bar_id)])
@@ -28,7 +28,6 @@ async def reply_with_link(client, message):
 
 @app.on_message(filters.command("start"), group=473)
 async def hms_start(client, message):
-    global waiting_for_hms
     if message.text.split(" ", 1)[-1].startswith("hms"):
         hms_ids = message.text.split(" ", 1)[-1]
         waiting_for_hms[message.from_user.id] = hms_ids
@@ -42,7 +41,6 @@ async def hms_start(client, message):
 
 @app.on_message(filters.private & filters.text & ~filters.command("start"), group=921)
 async def send_hms(client, message):
-    global waiting_for_hms
     if message.from_user.id in waiting_for_hms:
         hms_ids = waiting_for_hms[message.from_user.id]
         to_id = int(hms_ids.split("to")[-1].split("in")[0])
@@ -51,22 +49,20 @@ async def send_hms(client, message):
         to_url = f"tg://openmessage?user_id={to_id}"
         from_url = f"tg://openmessage?user_id={from_id}"
 
-        # Cancel the previous whisper if exists
-        if str(to_id) in hmses:
-            del hmses[str(to_id)]
-        if str(from_id) in hmses:
-            del hmses[str(from_id)]
-
-        # Store the new whisper
-        hmses[str(to_id)] = {"hms": message.text, "bar": in_id}
-        hmses[str(from_id)] = {"hms": message.text, "bar": in_id}
+        # Store the new whisper using message ID as key
+        hmses[message.message_id] = {
+            "hms": message.text,
+            "bar": in_id,
+            "to_id": to_id,
+            "from_id": from_id
+        }
 
         await message.reply_text("• تم ارسال همستك بنجاح √")
 
         sent_message = await app.send_message(
             chat_id=in_id,
             text=f"⋆ الهمسه لـ ↞ <a href={to_url}>{(await app.get_chat(to_id)).first_name}</a>\n⋆ من ↞ <a href={from_url}>{(await app.get_chat(from_id)).first_name}</a>\n-",
-            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("• اضغط لرؤية الهمسه.", callback_data="hms_answer")]])
+            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("• اضغط لرؤية الهمسه.", callback_data=f"hms_answer_{message.message_id}")]])
         )
 
         # Delete the old prompt message if it exists
@@ -77,14 +73,15 @@ async def send_hms(client, message):
         hms_messages[to_id] = sent_message.message_id
         hms_messages[from_id] = sent_message.message_id
 
-@app.on_callback_query(filters.regex("hms_answer"))
+@app.on_callback_query(filters.regex(r"hms_answer_(\d+)"))
 async def display_hms(client, callback):
+    message_id = int(callback.data.split("_")[-1])
     in_id = callback.message.chat.id
     who_id = callback.from_user.id
 
-    if str(who_id) in hmses:
-        if hmses[str(who_id)]["bar"] == in_id:
-            await callback.answer(hmses[str(who_id)]["hms"], show_alert=True)
+    if message_id in hmses:
+        if hmses[message_id]["bar"] == in_id and (hmses[message_id]["to_id"] == who_id or hmses[message_id]["from_id"] == who_id):
+            await callback.answer(hmses[message_id]["hms"], show_alert=True)
         else:
             await callback.answer("• الهمسه لا تخصك.", show_alert=True)
     else:
