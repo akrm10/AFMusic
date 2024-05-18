@@ -3,6 +3,8 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from ZeMusic import app
 
 hmses = {}
+waiting_for_hms = {}
+hms_messages = {}
 
 @app.on_message(filters.reply & filters.regex("همسه") & filters.group)
 async def reply_with_link(client, message):
@@ -16,27 +18,31 @@ async def reply_with_link(client, message):
             [InlineKeyboardButton("اهمس هنا", url=start_link)]
         ]
     )
-    await message.reply_text(f"⋆ تم تحديد الهمسه لـ ↞ <a href={to_url}>{(await app.get_chat(user_id)).first_name}</a>\n⋆ اضغط الزر لكتابة الهمسة\n-", reply_markup=reply_markup)
+    
+    # Cancel the previous whisper prompt message if exists
+    if (my_id, bar_id) in hms_messages:
+        await app.delete_messages(chat_id=bar_id, message_ids=hms_messages[(my_id, bar_id)])
 
-waiting_for_hms = {}
-hms_messages = {}
+    sent_message = await message.reply_text(f"⋆ تم تحديد الهمسه لـ ↞ <a href={to_url}>{(await app.get_chat(user_id)).first_name}</a>\n⋆ اضغط الزر لكتابة الهمسة\n-", reply_markup=reply_markup)
+    hms_messages[(my_id, bar_id)] = sent_message.message_id
 
 @app.on_message(filters.command("start"), group=473)
 async def hms_start(client, message):
-    global waiting_for_hms, hms_messages
+    global waiting_for_hms
     if message.text.split(" ", 1)[-1].startswith("hms"):
         hms_ids = message.text.split(" ", 1)[-1]
         waiting_for_hms[message.from_user.id] = hms_ids
-
+        
+        # Cancel the previous whisper prompt message if exists
         if message.from_user.id in hms_messages:
             await app.delete_messages(chat_id=message.chat.id, message_ids=hms_messages[message.from_user.id])
-
+        
         sent_message = await message.reply_text("• اكتب همستك √")
         hms_messages[message.from_user.id] = sent_message.message_id
 
 @app.on_message(filters.private & filters.text & ~filters.command("start"), group=921)
 async def send_hms(client, message):
-    global waiting_for_hms, hms_messages
+    global waiting_for_hms
     if message.from_user.id in waiting_for_hms:
         hms_ids = waiting_for_hms[message.from_user.id]
         to_id = int(hms_ids.split("to")[-1].split("in")[0])
@@ -64,8 +70,8 @@ async def send_hms(client, message):
         )
 
         # Delete the old prompt message if it exists
-        if message.from_user.id in hms_messages:
-            await app.delete_messages(chat_id=message.chat.id, message_ids=hms_messages[message.from_user.id])
+        if from_id in hms_messages:
+            await app.delete_messages(chat_id=in_id, message_ids=hms_messages[from_id])
 
         del waiting_for_hms[message.from_user.id]
         hms_messages[to_id] = sent_message.message_id
