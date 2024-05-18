@@ -1,6 +1,27 @@
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from ZeMusic import app
+import sqlite3
+
+# إنشاء اتصال بقاعدة بيانات SQLite
+conn = sqlite3.connect( hms_database.db )
+c = conn.cursor()
+
+# إنشاء جدول لتخزين الهمسات
+c.execute(   CREATE TABLE IF NOT EXISTS whispers
+             (message_id INTEGER PRIMARY KEY, hms TEXT, bar INTEGER, to_id INTEGER, from_id INTEGER)   )
+
+# دالة لحفظ الهمسة في قاعدة البيانات
+def save_whisper(message_id, hms, bar, to_id, from_id):
+    c.execute("INSERT INTO whispers (message_id, hms, bar, to_id, from_id) VALUES (?, ?, ?, ?, ?)", (message_id, hms, bar, to_id, from_id))
+    conn.commit()
+
+# دالة للتحقق من وجود همسات مخزنة لمستخدم
+def check_whispers(user_id):
+    c.execute("SELECT * FROM whispers WHERE to_id = ? OR from_id = ?", (user_id, user_id))
+    return c.fetchall()
+
+# تهيئة عميل Pyrogram
+app = Client("my_bot")
 
 hmses = {}
 waiting_for_hms = {}
@@ -19,12 +40,12 @@ async def reply_with_link(client, message):
         ]
     )
 
-    # Cancel the previous whisper prompt message if exists
+    # إلغاء رسالة الهمسة السابقة إن وجدت
     if (my_id, bar_id) in hms_messages:
         await app.delete_messages(chat_id=bar_id, message_ids=hms_messages[(my_id, bar_id)])
 
     sent_message = await message.reply_text(f"⋆ تم تحديد الهمسه لـ ↞ <a href={to_url}>{(await app.get_chat(user_id)).first_name}</a>\n⋆ اضغط الزر لكتابة الهمسة\n-", reply_markup=reply_markup)
-    hms_messages[(my_id, bar_id)] = sent_message.id  # Use id instead of message_id
+    hms_messages[(my_id, bar_id)] = sent_message.message_id  # استخدم message_id بدلاً من message_id
 
 @app.on_message(filters.command("start"), group=473)
 async def hms_start(client, message):
@@ -32,12 +53,12 @@ async def hms_start(client, message):
         hms_ids = message.text.split(" ", 1)[-1]
         waiting_for_hms[message.from_user.id] = hms_ids
         
-        # Cancel the previous whisper prompt message if exists
+        # إلغاء رسالة الهمسة السابقة إن وجدت
         if message.from_user.id in hms_messages:
             await app.delete_messages(chat_id=message.chat.id, message_ids=hms_messages[message.from_user.id])
         
         sent_message = await message.reply_text("• اكتب همستك √")
-        hms_messages[message.from_user.id] = sent_message.id  # Use id instead of message_id
+        hms_messages[message.from_user.id] = sent_message.message_id  # استخدم message_id بدلاً من message_id
 
 @app.on_message(filters.private & filters.text & ~filters.command("start"), group=921)
 async def send_hms(client, message):
@@ -49,32 +70,32 @@ async def send_hms(client, message):
         to_url = f"tg://openmessage?user_id={to_id}"
         from_url = f"tg://openmessage?user_id={from_id}"
 
-        # Store the new whisper using message ID as key
-        hmses[message.id] = {
+        # حفظ الهمسة الجديدة باستخدام message_id كمفتاح
+        hmses[message.message_id] = {
             "hms": message.text,
             "bar": in_id,
             "to_id": to_id,
             "from_id": from_id
         }
 
-        # Delete the user s whisper message after receiving it
-        await app.delete_messages(chat_id=message.chat.id, message_ids=[message.id])
+        # حذف رسالة الهمسة للمستخدم بعد استلامها
+        await app.delete_messages(chat_id=message.chat.id, message_ids=[message.message_id])
 
         await message.reply_text("• تم ارسال همستك بنجاح √")
 
         sent_message = await app.send_message(
             chat_id=in_id,
             text=f"⋆ الهمسه لـ ↞ <a href={to_url}>{(await app.get_chat(to_id)).first_name}</a>\n⋆ من ↞ <a href={from_url}>{(await app.get_chat(from_id)).first_name}</a>\n-",
-            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("• اضغط لرؤية الهمسه.", callback_data=f"hms_answer_{message.id}")]])
+            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("• اضغط لرؤية الهمسه.", callback_data=f"hms_answer_{message.message_id}")]])
         )
 
-        # Delete the old prompt message if it exists
+        # حذف رسالة الهمسة القديمة إن وجدت
         if from_id in hms_messages:
             await app.delete_messages(chat_id=in_id, message_ids=hms_messages[from_id])
 
         del waiting_for_hms[message.from_user.id]
-        hms_messages[to_id] = sent_message.id
-        hms_messages[from_id] = sent_message.id
+        hms_messages[to_id] = sent_message.message_id
+        hms_messages[from_id] = sent_message.message_id
 
 @app.on_callback_query(filters.regex(r"hms_answer_(\d+)"))
 async def display_hms(client, callback):
@@ -89,3 +110,5 @@ async def display_hms(client, callback):
             await callback.answer("• الهمسه لا تخصك.", show_alert=True)
     else:
         await callback.answer("• لا توجد همسه لك.", show_alert=True)
+
+# تشغيل ال
