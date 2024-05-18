@@ -19,18 +19,24 @@ async def reply_with_link(client, message):
     await message.reply_text(f"⋆ تم تحديد الهمسه لـ ↞ <a href={to_url}>{(await app.get_chat(user_id)).first_name}</a>\n⋆ اضغط الزر لكتابة الهمسة\n-", reply_markup=reply_markup)
 
 waiting_for_hms = {}
+hms_messages = {}
 
 @app.on_message(filters.command("start"), group=473)
 async def hms_start(client, message):
-    global waiting_for_hms
+    global waiting_for_hms, hms_messages
     if message.text.split(" ", 1)[-1].startswith("hms"):
         hms_ids = message.text.split(" ", 1)[-1]
         waiting_for_hms[message.from_user.id] = hms_ids
-        await message.reply_text("• اكتب همستك √")
+
+        if message.from_user.id in hms_messages:
+            await app.delete_messages(chat_id=message.chat.id, message_ids=hms_messages[message.from_user.id])
+
+        sent_message = await message.reply_text("• اكتب همستك √")
+        hms_messages[message.from_user.id] = sent_message.message_id
 
 @app.on_message(filters.private & filters.text & ~filters.command("start"), group=921)
 async def send_hms(client, message):
-    global waiting_for_hms
+    global waiting_for_hms, hms_messages
     if message.from_user.id in waiting_for_hms:
         hms_ids = waiting_for_hms[message.from_user.id]
         to_id = int(hms_ids.split("to")[-1].split("in")[0])
@@ -51,13 +57,19 @@ async def send_hms(client, message):
 
         await message.reply_text("• تم ارسال همستك بنجاح √")
 
-        await app.send_message(
+        sent_message = await app.send_message(
             chat_id=in_id,
             text=f"⋆ الهمسه لـ ↞ <a href={to_url}>{(await app.get_chat(to_id)).first_name}</a>\n⋆ من ↞ <a href={from_url}>{(await app.get_chat(from_id)).first_name}</a>\n-",
             reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("• اضغط لرؤية الهمسه.", callback_data="hms_answer")]])
         )
 
+        # Delete the old prompt message if it exists
+        if message.from_user.id in hms_messages:
+            await app.delete_messages(chat_id=message.chat.id, message_ids=hms_messages[message.from_user.id])
+
         del waiting_for_hms[message.from_user.id]
+        hms_messages[to_id] = sent_message.message_id
+        hms_messages[from_id] = sent_message.message_id
 
 @app.on_callback_query(filters.regex("hms_answer"))
 async def display_hms(client, callback):
