@@ -39,7 +39,15 @@ async def send_hms(client, message):
         to_url = f"tg://openmessage?user_id={to_id}"
         from_url = f"tg://openmessage?user_id={from_id}"
 
+        # Cancel the previous whisper if exists
+        if str(to_id) in hmses:
+            del hmses[str(to_id)]
+        if str(from_id) in hmses:
+            del hmses[str(from_id)]
+
+        # Store the new whisper
         hmses[str(to_id)] = {"hms": message.text, "bar": in_id}
+        hmses[str(from_id)] = {"hms": message.text, "bar": in_id}
 
         await message.reply_text("• تم ارسال همستك بنجاح √")
 
