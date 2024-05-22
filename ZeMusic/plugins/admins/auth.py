@@ -18,7 +18,7 @@ from config import BANNED_USERS, adminlist
 @AdminActual
 async def auth(client, message: Message, _):
     if not message.reply_to_message:
-        if len(message.command) == 1:
+        if "رفع ادمن" in (message.command):
             return await message.reply_text(_["general_1"])
         user = message.text.split(None, 2)[2]
         if "@" in user:
