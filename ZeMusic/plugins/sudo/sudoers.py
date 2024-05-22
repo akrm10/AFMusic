@@ -65,17 +65,17 @@ async def userdel(client, message: Message, _):
             return
         await message.reply_text(f"حدث خطاء.")
         return
-    user_id = message.reply_to_message.from_user.id
-    if DAV == user_id:
+    user = await extract_user(message)
+    if DAV == user.id:
         return await message.reply_text(_["abod"].format(user.mention))
-    if user_id not in SUDOERS:
-        return await message.reply_text(_["sudo_3"].format(user.mention))     
-    removed = await remove_sudo(user_id)
+    if user.id not in SUDOERS:
+        return await message.reply(_["sudo_3"].format(user.mention))
+    removed = await remove_sudo(user.id)
     if removed:
-        SUDOERS.remove(user_id)
-        await message.reply_text(_["sudo_4"].format(user.mention))
-        return
-    await message.reply_text(f"حدث خطاء.")
+        SUDOERS.remove(user.id)
+        await message.reply(_["sudo_4"].format(user.mention))
+    else:
+        await message.reply(_["sudo_8"])
 
 
 @app.on_message(filters.command(["المطورين", "/listsudo", "/sudoers"],"") & ~BANNED_USERS)
