@@ -33,7 +33,7 @@ async def auth(client, message: Message, _):
         from_user_id = message.from_user.id
         _check = await get_authuser_names(message.chat.id)
         count = len(_check)
-        if int(count) == 20:
+        if int(count) == 50:
             return await message.reply_text(_["auth_1"])
         if token not in _check:
             assis = {
@@ -47,9 +47,9 @@ async def auth(client, message: Message, _):
                 if user.id not in get:
                     get.append(user.id)
             await save_authuser(message.chat.id, token, assis)
-            return await message.reply_text(_["auth_2"])
+            return await message.reply_text(_["auth_2"]).format(user.mention))
         else:
-            await message.reply_text(_["auth_3"])
+            await message.reply_text(_["auth_3"]).format(user.mention))
         return
     from_user_id = message.from_user.id
     user_id = message.reply_to_message.from_user.id
@@ -60,7 +60,7 @@ async def auth(client, message: Message, _):
     count = 0
     for smex in _check:
         count += 1
-    if int(count) == 20:
+    if int(count) == 50:
         return await message.reply_text(_["auth_1"])
     if token not in _check:
         assis = {
@@ -74,9 +74,9 @@ async def auth(client, message: Message, _):
             if user_id not in get:
                 get.append(user_id)
         await save_authuser(message.chat.id, token, assis)
-        return await message.reply_text(_["auth_2"])
+        return await message.reply_text(_["auth_2"]).format(user.mention))
     else:
-        await message.reply_text(_["auth_3"])
+        await message.reply_text(_["auth_3"]).format(user.mention))
 
                                                            
 @app.on_message(filters.command(["تنزيل ادمن"],"") & filters.group & ~BANNED_USERS)
@@ -99,9 +99,9 @@ async def unauthusers(client, message: Message, _):
             if user.id in get:
                 get.remove(user.id)
         if deleted:
-            return await message.reply_text(_["auth_4"])
+            return await message.reply_text(_["auth_4"]).format(user.mention))
         else:
-            return await message.reply_text(_["auth_5"])
+            return await message.reply_text(_["auth_5"]).format(user.mention))
     user_id = message.reply_to_message.from_user.id
     token = await int_to_alpha(user_id)
     deleted = await delete_authuser(message.chat.id, token)
@@ -110,9 +110,9 @@ async def unauthusers(client, message: Message, _):
         if user_id in get:
             get.remove(user_id)
     if deleted:
-        return await message.reply_text(_["auth_4"])
+        return await message.reply_text(_["auth_4"]).format(user.mention))
     else:
-        return await message.reply_text(_["auth_5"])
+        return await message.reply_text(_["auth_5"]).format(user.mention))
 
 
 @app.on_message(
