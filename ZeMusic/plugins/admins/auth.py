@@ -18,29 +18,62 @@ from config import BANNED_USERS, adminlist
 @AdminActual
 async def auth(client, message: Message, _):
     if not message.reply_to_message:
-        if "رفع ادمن" not in message.text.split():
-            return
-    user = await extract_user(message)
-    token = await int_to_alpha(user.id)
+        if len(message.command) != 2:
+            return await message.reply_text(_["general_1"])
+        user = message.text.split(None, 1)[1]
+        if "@" in user:
+            user = user.replace("@", "")
+        user = await app.get_users(user)
+        user_id = message.from_user.id
+        token = await int_to_alpha(user.id)
+        from_user_name = message.from_user.first_name
+        from_user_id = message.from_user.id
+        _check = await get_authuser_names(message.chat.id)
+        count = len(_check)
+        if int(count) == 20:
+            return await message.reply_text(_["auth_1"])
+        if token not in _check:
+            assis = {
+                "auth_user_id": user.id,
+                "auth_name": user.first_name,
+                "admin_id": from_user_id,
+                "admin_name": from_user_name,
+            }
+            get = adminlist.get(message.chat.id)
+            if get:
+                if user.id not in get:
+                    get.append(user.id)
+            await save_authuser(message.chat.id, token, assis)
+            return await message.reply_text(_["auth_2"])
+        else:
+            await message.reply_text(_["auth_3"])
+        return
+    from_user_id = message.from_user.id
+    user_id = message.reply_to_message.from_user.id
+    user_name = message.reply_to_message.from_user.first_name
+    token = await int_to_alpha(user_id)
+    from_user_name = message.from_user.first_name
     _check = await get_authuser_names(message.chat.id)
-    count = len(_check)
-    if int(count) == 25:
+    count = 0
+    for smex in _check:
+        count += 1
+    if int(count) == 20:
         return await message.reply_text(_["auth_1"])
     if token not in _check:
         assis = {
-            "auth_user_id": user.id,
-            "auth_name": user.first_name,
-            "admin_id": message.from_user.id,
-            "admin_name": message.from_user.first_name,
+            "auth_user_id": user_id,
+            "auth_name": user_name,
+            "admin_id": from_user_id,
+            "admin_name": from_user_name,
         }
         get = adminlist.get(message.chat.id)
         if get:
-            if user.id not in get:
-                get.append(user.id)
+            if user_id not in get:
+                get.append(user_id)
         await save_authuser(message.chat.id, token, assis)
-        return await message.reply_text(_["auth_2"].format(user.mention))
+        return await message.reply_text(_["auth_2"])
     else:
-        return await message.reply_text(_["auth_3"].format(user.mention))
+        await message.reply_text(_["auth_3"])
 
 
 @app.on_message(filters.command("تنزيل ادمن") & filters.group & ~BANNED_USERS)
