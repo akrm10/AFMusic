@@ -10,7 +10,7 @@ from ZeMusic.utils.inline import close_markup
 from config import BANNED_USERS, OWNER_ID
 
 
-@app.on_message(filters.command(["رفع مطور"]) & filters.user(OWNER_ID))
+@app.on_message(filters.command(["رفع مطور"],"") & filters.user(OWNER_ID))
 @language
 async def useradd(client, message: Message, _):
     if not message.reply_to_message:
@@ -44,7 +44,7 @@ async def useradd(client, message: Message, _):
     return
 
 
-@app.on_message(filters.command(["تنزيل مطور", "rmsudo"]) & filters.user(OWNER_ID))
+@app.on_message(filters.command(["تنزيل مطور", "/rmsudo"],"") & filters.user(OWNER_ID))
 @language
 async def userdel(client, message: Message, _):
     if not message.reply_to_message:
@@ -74,7 +74,7 @@ async def userdel(client, message: Message, _):
     await message.reply_text(f"حدث خطاء.")
 
 
-@app.on_message(filters.command(["المطورين", "listsudo", "sudoers"]) & ~BANNED_USERS)
+@app.on_message(filters.command(["المطورين", "/listsudo", "/sudoers"],"") & ~BANNED_USERS)
 @language
 async def sudoers_list(client, message: Message, _):
     text = _["sudo_5"]
