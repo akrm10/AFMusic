@@ -21,9 +21,16 @@ async def auth(client, message: Message, _):
         if len(message.command) != 2:
             return await message.reply_text(_["general_1"])
         user = message.text.split(None, 2)[2]
-        if "@" in user:
-            user = user.replace("@", "")
-        else:
+        #if "@" in user:
+            #user = user.replace("@", "")
+        #else:
+            #return await message.reply_text(_["general_1"])
+        try:
+            if "@" in user:
+                user = await app.get_users(user.replace("@", ""))
+            else:
+                user = await app.get_users(int(user))
+        except Exception as e:
             return await message.reply_text(_["general_1"])
         user = await app.get_users(user)
         user_id = message.from_user.id
