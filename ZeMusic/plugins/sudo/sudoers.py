@@ -50,7 +50,7 @@ async def userdel(client, message: Message, _):
     if not message.reply_to_message:
         if len(message.command) != 2:
             return await message.reply_text(_["auth_1"])
-        user = message.text.split(None, 1)[1]
+        user = message.text.split(None, 2)[2]
         if "@" in user:
             user = user.replace("@", "")
         user = await app.get_users(user)
