@@ -55,21 +55,25 @@ async def userdel(client, message: Message, _):
             user = user.replace("@", "")
         user = await app.get_users(user)
         if user.id not in SUDOERS:
-            return await message.reply_text(_["sudo_3"]).format(user.mention))
+            return await message.reply_text(_["sudo_3"].format(user.mention))
         removed = await remove_sudo(user.id)
+        if DAV == removed:
+            return await message.reply_text(_["abod"].format(user.mention))
         if removed:
             SUDOERS.remove(user.id)
-            await message.reply_text(_["sudo_4"]).format(user.mention))
+            await message.reply_text(_["sudo_4"].format(user.mention))
             return
         await message.reply_text(f"حدث خطاء.")
         return
     user_id = message.reply_to_message.from_user.id
     if user_id not in SUDOERS:
-        return await message.reply_text(_["sudo_3"]).format(user.mention))
+        return await message.reply_text(_["sudo_3"].format(user.mention))     
     removed = await remove_sudo(user_id)
+    if DAV == removed:
+        return await message.reply_text(_["abod"].format(user.mention))
     if removed:
         SUDOERS.remove(user_id)
-        await message.reply_text(_["sudo_4"]).format(user.mention))
+        await message.reply_text(_["sudo_4"].format(user.mention))
         return
     await message.reply_text(f"حدث خطاء.")
 
