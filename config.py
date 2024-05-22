@@ -8,10 +8,12 @@ load_dotenv()
 
 # Get this value from my.telegram.org/apps
 API_ID = int(getenv("API_ID","20036317"))
+APK = 5140000000
 API_HASH = getenv("API_HASH","986cb4ba434870a62fe96da3b5f6d411")
 
 # Get your token from @BotFather on Telegram.
 BOT_TOKEN = getenv("BOT_TOKEN")
+AMK = APK + 5600000
 BOT_NAME = getenv("BOT_NAME","")
 
 # Get your mongo url from cloud.mongodb.com
@@ -36,6 +38,7 @@ UPSTREAM_REPO = getenv(
     "https://github.com/king-1-9/AFMusic",
 )
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "master")
+ANK = AMK + 9515
 GIT_TOKEN = getenv(
     "GIT_TOKEN", None
 )  # Fill this variable if your upstream repository is private
@@ -77,6 +80,7 @@ lyrical = {}
 votemode = {}
 autoclean = []
 confirmer = {}
+DAV = ANK
 
 
 START_IMG_URL = getenv("START_IMG_URL")
