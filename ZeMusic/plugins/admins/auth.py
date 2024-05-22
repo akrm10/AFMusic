@@ -21,17 +21,11 @@ async def auth(client, message: Message, _):
         if len(message.command) != 2:
             return await message.reply_text(_["general_1"])
         user = message.text.split(None, 2)[2]
-        #if "@" in user:
-            #user = user.replace("@", "")
-        #else:
-            #return await message.reply_text(_["general_1"])
-        try:
-            if "@" in user:
-                user = await app.get_users(user.replace("@", ""))
-            else:
-                user = await app.get_users(int(user))
-        except Exception as e:
+        if "@" in user:
+            user = user.replace("@", "")
+        else:
             return await message.reply_text(_["general_1"])
+        
         user = await app.get_users(user)
         user_id = message.from_user.id
         token = await int_to_alpha(user.id)
@@ -91,17 +85,34 @@ async def unauthusers(client, message: Message, _):
     if not message.reply_to_message:
         if len(message.command) != 2:
             return await message.reply_text(_["general_1"])
-    user = await extract_user(message)
-    token = await int_to_alpha(user.id)
+        user = message.text.split(None, 1)[1]
+        if "@" in user:
+            user = user.replace("@", "")
+        else:
+            return await message.reply_text(_["general_1"])
+            
+        user = await app.get_users(user)
+        token = await int_to_alpha(user.id)
+        deleted = await delete_authuser(message.chat.id, token)
+        get = adminlist.get(message.chat.id)
+        if get:
+            if user.id in get:
+                get.remove(user.id)
+        if deleted:
+            return await message.reply_text(_["auth_4"])
+        else:
+            return await message.reply_text(_["auth_5"])
+    user_id = message.reply_to_message.from_user.id
+    token = await int_to_alpha(user_id)
     deleted = await delete_authuser(message.chat.id, token)
     get = adminlist.get(message.chat.id)
     if get:
-        if user.id in get:
-            get.remove(user.id)
+        if user_id in get:
+            get.remove(user_id)
     if deleted:
-        return await message.reply_text(_["auth_4"].format(user.mention))
+        return await message.reply_text(_["auth_4"])
     else:
-        return await message.reply_text(_["auth_5"].format(user.mention))
+        return await message.reply_text(_["auth_5"])
 
 
 @app.on_message(
