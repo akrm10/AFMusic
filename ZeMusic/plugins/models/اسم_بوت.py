@@ -5,16 +5,18 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from config import BOT_NAME
 
-italy = ["لبيه يا {nameuser}",
-         "ءامر يا {nameuser}",
-         "بوت بحلقك",
-         "شفيك",
+italy = [
+         "لبيه يا {nameuser}",
+         "سم يا {nameuser}",
+         "مين مزعلك يعيوني",
+         "قلبي ودقاته وكل حياته 🥺",
          "شتبي مني",
-         "زعلان",
-         "{BOT_NAME} يلعنك يا {nameuser}",
-         "ايش 😒",
+         "ادري عاجبك اسمي",
+         "عيون {BOT_NAME}",
+         "يالبى اسمي من فمك ❤️‍🔥.",
          "يارب يكون شي مهم",
-         "حوت يكلك"]
+         "عيوني تحولت قلوب 🥺❤️.",
+         "]
 
 @app.on_message(filters.text & filters.regex(rf"(^|\W){BOT_NAME}(\W|$)"))
 async def Italymusic(client, message):
