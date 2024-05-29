@@ -17,9 +17,9 @@ italy = ["لبيه يا {nameuser}",
          "يارب يكون شي مهم 🙄",
          "حوت يكلك"]
 
-@app.on_message(filters.text & filters.regex(r"(^|\W)بوت(\W|$)"))
+@app.on_message(filters.text)
 async def Italymusic(client, message):
-    if "بوت" in message.text:
+    if message.text.strip() == "بوت":
         response = random.choice(italy)
         response = response.format(nameuser=message.from_user.first_name, BOT_NAME=BOT_NAME)
         await message.reply(response)
