@@ -7,14 +7,14 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from config import BOT_NAME
 
 italy = ["لبيه يا {nameuser}",
-         "ءامر يا {nameuser}",
+         "اسمي {BOT_NAME} 😒.",
          "بوت بحلقك",
          "شفيك",
          "شتبي مني",
          "زعلان",
          "{BOT_NAME} يلعنك يا {nameuser}",
          "ايش 😒",
-         "يارب يكون شي مهم",
+         "يارب يكون شي مهم 🙄",
          "حوت يكلك"]
 
 @app.on_message(filters.text & filters.regex(r"(^|\W)بوت(\W|$)"))
