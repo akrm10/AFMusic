@@ -20,7 +20,7 @@ italy = ["لبيه يا {nameuser}",
          "قلب {BOT_NAME} 🫀"
          ]
 
-@app.on_message(filters.text & filters.regex(rf"(^|\W){BOT_NAME}(\W|$)"))
+@app.on_message(filters.text & filters.regex(r"^\{BOT_NAME}$"))
 async def Italymusic(client, message):
     if BOT_NAME in message.text:
         response = random.choice(italy)
