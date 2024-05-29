@@ -5,17 +5,17 @@ import random
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-
-italy = ["عيون عبود",
-         "روح عبود",
-         "قلب عبود",
-         "حب عبود",
+italy = ["لبيه يا {nameuser}",
+         "ءامر يا {nameuser}",
+         "بوت بحلقك",
+         "شفيك",
          "شتبي مني",
-        "زعلان",
-        "مريض"]
+         "زعلان",
+         "مريض"]
 
-@app.on_message(filters.text & filters.regex(r"(^|\W)عبود(\W|$)"))
+@app.on_message(filters.text & filters.regex(r"(^|\W)بوت(\W|$)"))
 async def Italymusic(client, message):
-    if "عبود" in message.text:
+    if "بوت" in message.text:
         response = random.choice(italy)
+        response = response.format(nameuser=message.from_user.first_name)
         await message.reply(response)
