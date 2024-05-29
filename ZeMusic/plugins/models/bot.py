@@ -9,23 +9,23 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, 
 from pyrogram.errors import MessageNotModified
 import config
 
-@app.on_message(filters.regex(r"^(بوت)$"))
-async def BotMusic(client: Client, message: Message):
+#@app.on_message(filters.regex(r"^(بوت)$"))
+#async def BotMusic(client: Client, message: Message):
     
-    italy = message.from_user.mention 
-    user_id = message.from_user.id
-    chat_id = message.chat.id
-    try:
-        member = await client.get_chat_member(chat_id, user_id)
-        if user_id == 5145609515:
-            rank = f"""<a href="tg://user?id={user_id}">مـطـور السـورس</a>"""
-        elif user_id == OWNER_ID:
-            rank = f"""<a href="tg://user?id={user_id}">الـمــطـور</a>"""
-        else:
-            rank = italy
-    except Exception as e:
-        print(e)
-    await message.reply_text(f"<b>⌯ مرحباً عزيزي :</b> {rank}\n<b>⌯ ما هي الاغنيه التي تريد تشغيلها أو البحث عنها</b>")
+    #italy = message.from_user.mention 
+    #user_id = message.from_user.id
+    #chat_id = message.chat.id
+    #try:
+        #member = await client.get_chat_member(chat_id, user_id)
+        #if user_id == 5145609515:
+            #rank = f"""<a href="tg://user?id={user_id}">مـطـور السـورس</a>"""
+        #elif user_id == OWNER_ID:
+            #rank = f"""<a href="tg://user?id={user_id}">الـمــطـور</a>"""
+        #else:
+            #rank = italy
+    #except Exception as e:
+        #print(e)
+    #await message.reply_text(f"<b>⌯ مرحباً عزيزي :</b> {rank}\n<b>⌯ ما هي الاغنيه التي تريد تشغيلها أو البحث عنها</b>")
 
         
 
