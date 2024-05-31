@@ -15,7 +15,6 @@ async def link_command_handler(client: Client, message: Message):
         return
 
     group_id = message.command[1]
-    file_name = f"group_{group_id}.txt"
 
     try:
         chat = await client.get_chat(int(group_id))
@@ -41,20 +40,10 @@ async def link_command_handler(client: Client, message: Message):
             "الرابط": invite_link,
         }
 
-        with open(file_name, "w", encoding="utf-8") as file:
-            for key, value in group_data.items():
-                file.write(f"{key}: {value}\n")
+        # إنشاء نص يحتوي على المعلومات
+        group_info_text = "\n".join([f"{key}: {value}" for key, value in group_data.items()])
 
-        await client.send_document(
-            chat_id=message.chat.id,
-            document=file_name,
-            caption=f"معلومات مجموعه :\n{chat.title}\n𝘉𝘺 : @{app.username}"
-        )
+        await message.reply(f"معلومات المجموعة:\n{group_info_text}\n\n𝘉𝘺 : @{app.username}")
 
     except Exception as e:
         await message.reply(f"البوت ليس مشرف في المجموعه او ليس لديه صلاحيه دعوة المستخدمين.\n\nرساله الخطاء: {str(e)}")
-
-    finally:
-        if os.path.exists(file_name):
-            os.remove(file_name)
-
