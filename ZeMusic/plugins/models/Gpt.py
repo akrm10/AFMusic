@@ -1,8 +1,7 @@
 import random
 import time
 import requests
-from AarohiX import app
-from config import BOT_USERNAME
+from ZeMusic import app
 
 from pyrogram.enums import ChatAction, ParseMode
 from pyrogram import filters
