@@ -4,7 +4,7 @@ from pyrogram.types import Message
 import yt_dlp
 
 @app.on_message(filters.command(["انستا"], ["/", "!", "."]))
-async def download_instareels(client: Client, message: Message):
+async def download_instareels(client: app, message: Message):
     try:
         reel_ = message.command[1]
     except IndexError:
@@ -27,12 +27,8 @@ async def download_instareels(client: Client, message: Message):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(reel_, download=True)
             video_file = ydl.prepare_filename(info_dict)
-
         await message.reply_video(video_file)
         
-        # تنظيف الملف بعد الإرسال
-        if os.path.exists(video_file):
-            os.remove(video_file)
     except Exception as e:
         await message.reply_text(f"حدث خطأ أثناء تحميل الفيديو: {e}")
 
