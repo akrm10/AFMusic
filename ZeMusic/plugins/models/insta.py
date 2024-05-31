@@ -9,8 +9,19 @@ loader = instaloader.Instaloader()
 @app.on_message(filters.command("انستا") & filters.text)
 def download_reel(client, message):
     try:
+        # التحقق من أن الرسالة تحتوي على رابط
+        parts = message.text.split(" ")
+        if len(parts) < 2:
+            message.reply_text("يرجى إدخال رابط Instagram بعد الأمر.")
+            return
+
         # استخراج الرابط من الرسالة
-        url = message.text.split(" ")[1]
+        url = parts[1]
+
+        # التحقق من صحة الرابط
+        if "instagram.com" not in url:
+            message.reply_text("يرجى إدخال رابط Instagram صحيح.")
+            return
 
         # تحميل الفيديو باستخدام instaloader
         shortcode = url.split("/")[-2]
@@ -29,3 +40,6 @@ def download_reel(client, message):
     except Exception as e:
         message.reply_text(f"حدث خطأ: {e}")
 
+# بدء تشغيل البوت
+if __name__ == "__main__":
+    app.run()
