@@ -2,7 +2,7 @@ import asyncio
 import os
 import time
 from time import time
-
+from ZeMusic import app
 import requests
 import yt_dlp
 from pyrogram import Client, filters
@@ -21,7 +21,7 @@ SPAM_WINDOW_SECONDS = 5
 # -------------------------------------------------------------------------------
 
 
-@Client.on_message(filters.command("song1"))
+@app.on_message(filters.command("song1"))
 async def download_song(_, message):
     user_id = message.from_user.id
     current_time = time()
@@ -105,7 +105,7 @@ async def download_song(_, message):
 ###### INSTAGRAM REELS DOWNLOAD
 
 
-@Client.on_message(filters.command(["ig"], ["/", "!", "."]))
+@app.on_message(filters.command(["ig"], ["/", "!", "."]))
 async def download_instareels(c: Client, m: Message):
     user_id = message.from_user.id
     current_time = time()
@@ -159,7 +159,7 @@ async def download_instareels(c: Client, m: Message):
 ######
 
 
-@Client.on_message(filters.command(["reel"], ["/", "!", "."]))
+@app.on_message(filters.command(["reel"], ["/", "!", "."]))
 async def instagram_reel(client: Client, message):
     user_id = message.from_user.id
     current_time = time()
