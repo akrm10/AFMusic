@@ -23,7 +23,7 @@ async def ihd(client: Client, message: Message):
         chat_id=message.chat.id,
         voice=url,
         caption="↯ : تم اختيار اغنية لك 🤍",
-        reply_to_message_id=message.message_id,
+        reply_to_message_id=message.message.id,
         reply_markup=InlineKeyboardMarkup(
             [
                 [
