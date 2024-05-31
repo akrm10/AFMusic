@@ -49,7 +49,3 @@ def download_instagram_video(client, message):
             message.reply_text(f"فشل تحميل الفيديو: {e}")
     except Exception as e:
         message.reply_text(f"حدث خطأ: {e}")
-
-# بدء تشغيل البوت
-if __name__ == "__main__":
-    app.run()
