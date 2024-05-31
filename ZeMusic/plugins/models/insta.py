@@ -1,54 +1,58 @@
-from pyrogram import Client, filters
-import instaloader
 import os
+import future
+import asyncio
+import requests
+import wget
+import time
+import yt_dlp
+from urllib.parse import urlparse
 from ZeMusic import app
+from pyrogram import Client, filters
+from pyrogram.types import Message
 
-# تهيئة instaloader
-loader = instaloader.Instaloader()
 
-# تحميل Reels فقط
-loader.context.reconsidering_profiles = False
-
-# أمر لتحميل Reels من Instagram
-@app.on_message(filters.command("انستا", prefixes="/") & filters.regex(r"https://www.instagram.com/reel/"))
-def download_instagram_reel(client, message):
+@app.on_message(filters.command(["انستا"], ["/", "!", "."]))
+async def download_instareels(c: app, m: Message):
     try:
-        # استخراج الرابط من الرسالة
-        url = message.text.split(" ")[1]
-        
-        # محاولة تحميل الفيديو Reels باستخدام instaloader
-        try:
-            # تحديد Reels
-            post = instaloader.Post.from_shortcode(loader.context, url.split("/")[-2])
-            
-            # التأكد من أن البوست يحتوي على Reels
-            if not post.is_video:
-                message.reply_text("الرابط لا يحتوي على فيديو Reels. يرجى إدخال رابط Reels صحيح.")
-                return
-
-            # تحميل الفيديو Reels
-            loader.download_post(post, target="downloads")
-
-            # إرسال الفيديو للمستخدم
-            for file_name in os.listdir("downloads"):
-                if file_name.endswith(".mp4"):
-                    video_path = os.path.join("downloads", file_name)
-                    client.send_video(message.chat.id, video_path)
-                    os.remove(video_path)
-
-            # تنظيف المجلد
-            os.rmdir("downloads")
-
-        except instaloader.exceptions.InstaloaderException as e:
-            message.reply_text(f"فشل تحميل الفيديو Reels: {e}")
-
+        reel_ = m.command[1]
     except IndexError:
-        message.reply_text("الرجاء إدخال رابط Instagram Reels بعد الأمر.")
+        await m.reply_text("أعطني رابطا لتحميل المقطع...")
+        return
+    if not reel_.startswith("https://www.instagram.com/reel/"):
+        await m.reply_text("من أجل الحصول على النتائج الصحيحه ، من الضروري وجود رابط صالح. يرجى تزويدي بالرابط المطلوب.")
+        return
+    OwO = reel_.split(".",1)
+    Reel_ = ".dd".join(OwO)
+    try:
+        await m.reply_video(Reel_)
+        return
+    except Exception:
+        try:
+            await m.reply_photo(Reel_)
+            return
+        except Exception:
+            try:
+                await m.reply_document(Reel_)
+                return
+            except Exception:
+                await m.reply_text("أنا غير قادر على الوصول إلى هذه النتيجه.")
 
-    except Exception as e:
-        message.reply_text(f"حدث خطأ: {e}")
 
-# بدء تشغيل البوت
-if __name__ == "__main__":
-    app.run()
+@app.on_message(filters.command(["تحميل استوري"], ["/", "!", "."]))
+async def instagram_reel(client, message):
+    if len(message.command) == 2:
+        url = message.command[1]
+        response = requests.post(f"https://lexica-api.vercel.app/download/instagram?url={url}")
+        data = response.json()
 
+        if data['code'] == 2:
+            media_urls = data['content']['mediaUrls']
+            if media_urls:
+                video_url = media_urls[0]['url']
+                await message.reply_video(f"{video_url}")
+            else:
+                await message.reply("لم يتم العثور على فيديو في الرد. قد يكون الحساب خاصا.")
+        else:
+            await message.reply("لم يكن الطلب ناجحا.")
+    else:
+        await message.reply("يرجى تقديم عنوان URL صالح لـ Instagram باستخدام الأمر تحميل استوري..")
