@@ -1,27 +1,29 @@
-"""
 import asyncio
 from ZeMusic import app 
-from strings.filters import command
 import random
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from config import BOT_NAME
 
-italy = ["لبيه يا {nameuser}",
-         "اسمي {BOT_NAME} 😒.",
-         "بوت بحلقك",
-         "شفيك",
-         "شتبي مني",
-         "زعلان",
-         "{BOT_NAME} يلعنك يا {nameuser}",
-         "ايش 😒",
-         "يارب يكون شي مهم 🙄",
-         "حوت يكلك"]
+Nb = BOT_NAME
 
-@app.on_message(filters.text)
+italy = [
+         "لبيه وش اغني لك",
+         "قول {BOT_NAME} غنيلي",
+         "{nameuser} اصعد مكالمه",
+         "لا تشغلني اصعد مكالمه",
+         "قول {BOT_NAME} شغل احبك",
+         "قول {BOT_NAME} ابحث احبك",
+         "اغني في قروب ثاني 🦦.",
+         "عيون {BOT_NAME} ايش تحب تسمع"
+         "ادري عاجبك اسمي ❤️",
+         "يارب يكون شي مهم"
+         ]
+
+@app.on_message(filters.regex(r"^(" + re.escape(Nb) + r")$"))
+
 async def Italymusic(client, message):
-    if message.text.strip() == "بوت":
+    if Nb in message.text:
         response = random.choice(italy)
         response = response.format(nameuser=message.from_user.first_name, BOT_NAME=BOT_NAME)
         await message.reply(response)
-"""
