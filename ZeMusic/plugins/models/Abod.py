@@ -1,11 +1,9 @@
-
-
 import asyncio
 
 import os
 import time
 import requests
-from config import START_IMG_URL
+from config import START_IMG_URL, BOT_NAME
 from pyrogram import filters
 import random
 from pyrogram import Client
@@ -15,9 +13,9 @@ from ZeMusic import (Apple, Resso, SoundCloud, Spotify, Telegram, YouTube, app)
 from ZeMusic import app
 from random import  choice, randint
 
+Nb = BOT_NAME + " غنيلي"
 
-
-@app.on_message(command(["غنيلي","‹ غنيلي ›"]))
+@app.on_message(filters.regex(r"^(غنيلي|‹ غنيلي ›|" + re.escape(Nb) + r")$"))
 async def ihd(client: Client, message: Message):
     rl = random.randint(2,90)
     url = f"https://t.me/BE_19/{rl}"
