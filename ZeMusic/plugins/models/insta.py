@@ -16,7 +16,7 @@ async def download_instareels(c: app, m: Message):
         return
 
     ydl_opts = {
-         outtmpl :  downloads/%(title)s.%(ext)s 
+         'outtmpl': 'downloads/%(title)s.%(ext)s'
     }
 
     try:
