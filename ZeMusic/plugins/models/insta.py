@@ -28,6 +28,12 @@ def download_instagram_video(client, message):
             # تحديد نوع الرابط (بوست، IGTV، Reel)
             shortcode = url.split("/")[-2]
             post = instaloader.Post.from_shortcode(loader.context, shortcode)
+            
+            # التأكد من أن البوست يحتوي على فيديو
+            if not post.is_video:
+                message.reply_text("الرابط لا يحتوي على فيديو. يرجى إدخال رابط يحتوي على فيديو.")
+                return
+
             loader.download_post(post, target="downloads")
 
             # إرسال الفيديو للمستخدم
