@@ -6,34 +6,27 @@ from ZeMusic import app
 # تهيئة instaloader
 loader = instaloader.Instaloader()
 
-@app.on_message(filters.command("انستا") & filters.text)
-def download_instagram_video(client, message):
+# تحميل Reels فقط
+loader.context.reconsidering_profiles = False
+
+# أمر لتحميل Reels من Instagram
+@app.on_message(filters.command("انستا", prefixes="/") & filters.regex(r"https://www.instagram.com/reel/"))
+def download_instagram_reel(client, message):
     try:
-        # التحقق من أن الرسالة تحتوي على رابط
-        parts = message.text.split(" ")
-        if len(parts) < 2:
-            message.reply_text("يرجى إدخال رابط Instagram بعد الأمر.")
-            return
-
         # استخراج الرابط من الرسالة
-        url = parts[1]
-
-        # التحقق من صحة الرابط
-        if "instagram.com" not in url:
-            message.reply_text("يرجى إدخال رابط Instagram صحيح.")
-            return
-
-        # محاولة تحميل الفيديو باستخدام instaloader
+        url = message.text.split(" ")[1]
+        
+        # محاولة تحميل الفيديو Reels باستخدام instaloader
         try:
-            # تحديد نوع الرابط (بوست، IGTV، Reel)
-            shortcode = url.split("/")[-2]
-            post = instaloader.Post.from_shortcode(loader.context, shortcode)
+            # تحديد Reels
+            post = instaloader.Post.from_shortcode(loader.context, url.split("/")[-2])
             
-            # التأكد من أن البوست يحتوي على فيديو
+            # التأكد من أن البوست يحتوي على Reels
             if not post.is_video:
-                message.reply_text("الرابط لا يحتوي على فيديو. يرجى إدخال رابط يحتوي على فيديو.")
+                message.reply_text("الرابط لا يحتوي على فيديو Reels. يرجى إدخال رابط Reels صحيح.")
                 return
 
+            # تحميل الفيديو Reels
             loader.download_post(post, target="downloads")
 
             # إرسال الفيديو للمستخدم
@@ -45,7 +38,17 @@ def download_instagram_video(client, message):
 
             # تنظيف المجلد
             os.rmdir("downloads")
+
         except instaloader.exceptions.InstaloaderException as e:
-            message.reply_text(f"فشل تحميل الفيديو: {e}")
+            message.reply_text(f"فشل تحميل الفيديو Reels: {e}")
+
+    except IndexError:
+        message.reply_text("الرجاء إدخال رابط Instagram Reels بعد الأمر.")
+
     except Exception as e:
         message.reply_text(f"حدث خطأ: {e}")
+
+# بدء تشغيل البوت
+if __name__ == "__main__":
+    app.run()
+
