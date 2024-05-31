@@ -12,7 +12,7 @@ from pyrogram.types import Message
 
 
 @app.on_message(filters.command(["انستا"], ["/", "!", "."]))
-async def download_instareels(c: app, m: Message):
+async def download_instareels(c: Client, m: Message):
     try:
         reel_ = m.command[1]
     except IndexError:
