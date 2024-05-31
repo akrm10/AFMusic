@@ -1,14 +1,19 @@
 from pyrogram import Client, filters
 import instaloader
 import os
+import requests
+import config
+import aiohttp
+import aiofiles
 
-# إعدادات البوت
-api_id =  API_ID   # استبدلها بـ API ID الخاص بك
-api_hash =  API_HASH   # استبدلها بـ API Hash الخاص بك
-bot_token =  BOT_TOKEN   # استبدلها بـ Bot Token الخاص بك
+import yt_dlp
+from yt_dlp import YoutubeDL
+from pyrogram import Client, filters
+from pyrogram.errors import FloodWait
+from pyrogram.types import Message, InputTextMessageContent
+from youtube_search import YoutubeSearch
 
-# تهيئة العميل
-app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
+from ZeMusic import app
 
 # تهيئة instaloader
 loader = instaloader.Instaloader()
