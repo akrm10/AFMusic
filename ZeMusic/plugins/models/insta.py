@@ -4,29 +4,38 @@ from pyrogram.types import Message
 import yt_dlp
 
 @app.on_message(filters.command(["انستا"], ["/", "!", "."]))
-async def download_instareels(c: Client, m: Message):
+async def download_instareels(client: Client, message: Message):
     try:
-        reel_ = m.command[1]
+        reel_ = message.command[1]
     except IndexError:
-        await m.reply_text("أعطني رابطا لتحميل المقطع...")
+        await message.reply_text("أعطني رابطا لتحميل المقطع...")
         return
 
     if not reel_.startswith("https://www.instagram.com/reel/"):
-        await m.reply_text("من أجل الحصول على النتائج الصحيحة، من الضروري وجود رابط صالح. يرجى تزويدي بالرابط المطلوب.")
+        await message.reply_text("من أجل الحصول على النتائج الصحيحة، من الضروري وجود رابط صالح. يرجى تزويدي بالرابط المطلوب.")
         return
 
     ydl_opts = {
-        'outtmpl' : 'downloads/%(title)s.%(ext)s'
+        'outtmpl': 'downloads/%(title)s.%(ext)s',
+        'format': 'best',
+        'quiet': True,
+        'no_warnings': True,
+        'ignoreerrors': True
     }
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(reel_, download=True)
             video_file = ydl.prepare_filename(info_dict)
+
+        await message.reply_video(video_file)
         
-        await m.reply_video(video_file)
+        # تنظيف الملف بعد الإرسال
+        if os.path.exists(video_file):
+            os.remove(video_file)
     except Exception as e:
-        await m.reply_text(f"حدث خطأ أثناء تحميل الفيديو: {e}")
+        await message.reply_text(f"حدث خطأ أثناء تحميل الفيديو: {e}")
+
 
 
 
