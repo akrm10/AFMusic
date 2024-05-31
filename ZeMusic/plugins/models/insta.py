@@ -1,4 +1,3 @@
-import os
 from ZeMusic import app
 from pyrogram import Client, filters
 from pyrogram.types import Message
@@ -17,7 +16,7 @@ async def download_instareels(c: Client, m: Message):
         return
 
     ydl_opts = {
-        'outtmpl': 'downloads/%(title)s.%(ext)s'
+         outtmpl :  downloads/%(title)s.%(ext)s 
     }
 
     try:
@@ -26,10 +25,6 @@ async def download_instareels(c: Client, m: Message):
             video_file = ydl.prepare_filename(info_dict)
         
         await m.reply_video(video_file)
-        
-        # تنظيف الملف بعد الإرسال
-        if os.path.exists(video_file):
-            os.remove(video_file)
     except Exception as e:
         await m.reply_text(f"حدث خطأ أثناء تحميل الفيديو: {e}")
 
