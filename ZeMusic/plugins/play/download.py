@@ -67,23 +67,27 @@ async def song_downloader(client, message: Message):
         await m.edit("<b>⇜ جـارِ التحميل ▬▬ . . .</b>")
         
         # فتح الملف الصوتي وإرساله بشكل غير متزامن
-        async with aiofiles.open(audio_file, mode='rb') as af:
-            await message.reply_audio(
-                audio=af,
-                caption=rep,
-                title=title,
-                performer=host,
-                thumb=thumb_name,
-                duration=dur,
-            )
-        await m.delete()
+        try:
+            async with aiofiles.open(audio_file, mode='rb') as af:
+                await message.reply_audio(
+                    audio=af,
+                    caption=rep,
+                    title=title,
+                    performer=host,
+                    thumb=thumb_name,
+                    duration=dur,
+                )
+            await m.delete()
+        except Exception as e:
+            await m.edit("حدث خطأ أثناء إرسال الملف الصوتي. يرجى المحاولة مرة أخرى لاحقًا.")
+            print(f"Error while sending audio file: {e}")
 
     except Exception as e:
-        await m.edit(" error, wait for bot owner to fix")
-        print(e)
+        await m.edit("حدث خطأ أثناء تحميل الملف الصوتي. يرجى المحاولة مرة أخرى لاحقًا.")
+        print(f"Error while downloading audio: {e}")
 
     try:
         remove_if_exists(audio_file)
         remove_if_exists(thumb_name)
     except Exception as e:
-        print(e)
+        print(f"Error while cleaning up files: {e}")
