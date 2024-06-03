@@ -39,9 +39,8 @@ async def song_downloader(client, message: Message):
         async with aiohttp.ClientSession() as session:
             async with session.get(thumbnail) as resp:
                 if resp.status == 200:
-                    f = await aiofiles.open(thumb_name, mode='wb')
-                    await f.write(await resp.read())
-                    await f.close()
+                    async with aiofiles.open(thumb_name, mode='wb') as f:
+                        await f.write(await resp.read())
         
         duration = results[0]["duration"]
 
@@ -66,21 +65,24 @@ async def song_downloader(client, message: Message):
         
         await m.edit("<b>⇜ جـارِ التحميل ▬▬ . . .</b>")
         
-        # فتح الملف الصوتي وإرساله بشكل غير متزامن
-        try:
-            async with aiofiles.open(audio_file, mode='rb') as af:
+        # التأكد من وجود الملف الصوتي قبل الإرسال
+        if os.path.exists(audio_file):
+            try:
                 await message.reply_audio(
-                    audio=af,
+                    audio=audio_file,
                     caption=rep,
                     title=title,
                     performer=host,
                     thumb=thumb_name,
                     duration=dur,
                 )
-            await m.delete()
-        except Exception as e:
-            await m.edit("حدث خطأ أثناء إرسال الملف الصوتي. يرجى المحاولة مرة أخرى لاحقًا.")
-            print(f"Error while sending audio file: {e}")
+                await m.delete()
+            except Exception as e:
+                await m.edit("حدث خطأ أثناء إرسال الملف الصوتي. يرجى المحاولة مرة أخرى لاحقًا.")
+                print(f"Error while sending audio file: {e}")
+        else:
+            await m.edit("حدث خطأ أثناء تحميل الملف الصوتي. لم يتم العثور على الملف.")
+            print("Audio file not found after download.")
 
     except Exception as e:
         await m.edit("حدث خطأ أثناء تحميل الملف الصوتي. يرجى المحاولة مرة أخرى لاحقًا.")
