@@ -22,6 +22,8 @@ skipdb = mongodb.skipmode
 sudoersdb = mongodb.sudoers
 usersdb = mongodb.tgusersdb
 
+dersdb = mongodb.dere
+
 # Shifting to memory [mongo sucks often]
 active = []
 activevideo = []
