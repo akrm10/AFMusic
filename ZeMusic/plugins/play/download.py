@@ -19,7 +19,7 @@ Nem = config.BOT_NAME + " ابحث"
 
 @app.on_message(command(["/song", "تحميل", "بحث", Nem]))
 async def song_downloader(client, message: Message):
-    if not is_search_enabled():
+    if not await is_search_enabled():
         await message.reply_text("<b>البحث معطل حاليًا.</b>")
         return
     
