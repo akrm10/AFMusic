@@ -9,6 +9,7 @@ from youtube_search import YoutubeSearch
 from ZeMusic import app
 from ZeMusic.plugins.play.filters import command
 import config
+from config import BANNED_USERS
 from ZeMusic.utils.database import is_search_enabled, enable_search, disable_search
 
 def remove_if_exists(path):
