@@ -102,13 +102,11 @@ async def song_downloader(client, message: Message):
 # أمر لتعطيل البحث
 @app.on_message(command(["تعطيل البحث"]))
 async def disable_search_command(client, message: Message):
-    chat_id = message.chat.id
-    await disable_search(chat_id)
+    await disable_search()
     await message.reply_text("<b>تم تعطيل البحث بنجاح.</b>")
 
 # أمر لتفعيل البحث
 @app.on_message(command(["تفعيل البحث"]))
 async def enable_search_command(client, message: Message):
-    chat_id = message.chat.id
-    await enable_search(chat_id)
+    await enable_search()
     await message.reply_text("<b>تم تفعيل البحث بنجاح.</b>")
