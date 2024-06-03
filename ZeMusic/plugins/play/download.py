@@ -20,7 +20,6 @@ Nem = config.BOT_NAME + " ابحث"
 @app.on_message(command(["/song", "تحميل", "بحث", Nem]))
 async def song_downloader(client, message: Message):
     if not await is_search_enabled():
-        await message.reply_text("<b>البحث معطل حاليًا.</b>")
         return
     
     query = " ".join(message.command[1:])
@@ -102,11 +101,17 @@ async def song_downloader(client, message: Message):
 # أمر لتعطيل البحث
 @app.on_message(command(["تعطيل البحث"]))
 async def disable_search_command(client, message: Message):
+    if not await is_search_enabled():
+        await message.reply_text("<b>البحث معطل من قبل.</b>")
+        return
     await disable_search()
     await message.reply_text("<b>تم تعطيل البحث بنجاح.</b>")
 
 # أمر لتفعيل البحث
 @app.on_message(command(["تفعيل البحث"]))
 async def enable_search_command(client, message: Message):
+    if await is_search_enabled():
+        await message.reply_text("<b>البحث مفعل من قبل.</b>")
+        return
     await enable_search()
     await message.reply_text("<b>تم تفعيل البحث بنجاح.</b>")
