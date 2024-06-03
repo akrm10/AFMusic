@@ -10,6 +10,9 @@ from ZeMusic import app
 from ZeMusic.plugins.play.filters import command
 import config
 
+# متغير لتعطيل أو تفعيل البحث
+is_search_enabled = True
+
 def remove_if_exists(path):
     if os.path.exists(path):
         os.remove(path)
@@ -18,6 +21,10 @@ Nem = config.BOT_NAME + " ابحث"
 
 @app.on_message(command(["/song", "تحميل", "بحث", Nem]))
 async def song_downloader(client, message: Message):
+    global is_search_enabled
+    if not is_search_enabled:
+        await message.reply_text("<b>البحث معطل حاليًا.</b>")
+        return
     query = " ".join(message.command[1:])
     m = await message.reply_text("<b>⇜ جـارِ البحث عـن المقطـع الصـوتـي . . .</b>")
     ydl_ops = {
@@ -93,3 +100,17 @@ async def song_downloader(client, message: Message):
         remove_if_exists(thumb_name)
     except Exception as e:
         print(f"Error while cleaning up files: {e}")
+
+# أمر لتعطيل البحث
+@app.on_message(command(["تعطيل البحث"]))
+async def disable_search(client, message: Message):
+    global is_search_enabled
+    is_search_enabled = False
+    await message.reply_text("<b>تم تعطيل البحث بنجاح.</b>")
+
+# أمر لتفعيل البحث
+@app.on_message(command(["تفعيل البحث"]))
+async def enable_search(client, message: Message):
+    global is_search_enabled
+    is_search_enabled = True
+    await message.reply_text("<b>تم تفعيل البحث بنجاح.</b>")
