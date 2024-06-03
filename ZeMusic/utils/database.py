@@ -47,10 +47,10 @@ async def is_search_enabled():
         return settings.get("enabled", False)
     return False
 
-async def enable_search():
+async def enable_search(chat_id):
     await dersdb.update_one({"chat_id": chat_id}, {"$set": {"enabled": True}}, upsert=True)
 
-async def disable_search():
+async def disable_search(chat_id):
     await dersdb.update_one({"chat_id": chat_id}, {"$set": {"enabled": False}}, upsert=True)
 
 
