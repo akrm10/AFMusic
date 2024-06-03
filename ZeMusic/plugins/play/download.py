@@ -10,8 +10,33 @@ from ZeMusic import app
 from ZeMusic.plugins.play.filters import command
 import config
 
-# متغير لتعطيل أو تفعيل البحث
-is_search_enabled = True
+stiklok =[]
+
+@app.on_message(command(["قفل البحث","تعطيل البحث"]))
+async def block_stickers(client:Client, message:Message):
+    get = await client.get_chat_member(message.chat.id, message.from_user.id)
+    if get.status in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]:
+        if message.chat.id in stiklok:
+            return await message.reply_text(f"البحث مقفل من قبل")
+        stiklok.append(message.chat.id)
+        return await message.reply_text(f"تم قفل البحث \n\n من قبل ←{message.from_user.mention}")
+    else:
+        return await message.reply_text(f"الامر يخص المشرف")
+    
+
+@app.on_message(filters.command(["فتح البحث","تفعيل البحث"]))
+async def block_stickers(client:Client, message:Message):
+    get = await client.get_chat_member(message.chat.id, message.from_user.id)
+    if get.status in ["creator", "administrator"]:
+        if message.chat.id in stiklok:
+            return await message.reply_text(f"البحث مقفل من قبل")
+        stiklok.append(message.chat.id)
+        return await message.reply_text(f"تم قفل البحث \n\n من قبل ←{message.from_user.mention}")
+    else:
+        return await message.reply_text(f"الامر يخص المشرف")
+    
+
+
 
 def remove_if_exists(path):
     if os.path.exists(path):
