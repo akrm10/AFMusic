@@ -104,7 +104,6 @@ async def song_downloader(client, message: Message):
 async def disable_search_command(client, message: Message):
     chat_id = message.chat.id
     await disable_search(chat_id)
-    await disable_search()
     await message.reply_text("<b>تم تعطيل البحث بنجاح.</b>")
 
 # أمر لتفعيل البحث
