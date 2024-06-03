@@ -9,8 +9,7 @@ from youtube_search import YoutubeSearch
 from ZeMusic import app
 from ZeMusic.plugins.play.filters import command
 import config
-from config import BANNED_USERS
-from ZeMusic.utils.decorators import AdminActual
+from config import OWNER_ID
 from ZeMusic.utils.database import is_search_enabled, enable_search, disable_search
 
 def remove_if_exists(path):
@@ -101,8 +100,7 @@ async def song_downloader(client, message: Message):
         print(f"Error while cleaning up files: {e}")
 
 # أمر لتعطيل البحث
-@app.on_message(command(["تعطيل البحث"]) & filters.group & ~BANNED_USERS)
-@AdminActual
+@app.on_message(command(["تعطيل البحث"]) & filters.group & OWNER_ID)
 async def disable_search_command(client, message: Message):
     if not await is_search_enabled():
         await message.reply_text("<b>البحث معطل من قبل.</b>")
@@ -111,8 +109,7 @@ async def disable_search_command(client, message: Message):
     await message.reply_text("<b>تم تعطيل البحث بنجاح.</b>")
 
 # أمر لتفعيل البحث
-@app.on_message(command(["تفعيل البحث"]) & filters.group & ~BANNED_USERS)
-@AdminActual
+@app.on_message(command(["تفعيل البحث"]) & filters.group & OWNER_ID)
 async def enable_search_command(client, message: Message):
     if await is_search_enabled():
         await message.reply_text("<b>البحث مفعل من قبل.</b>")
