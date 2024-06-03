@@ -41,6 +41,19 @@ playtype = {}
 skipmode = {}
 
 
+def is_search_enabled():
+    settings = dersdb.find_one({"chat_id": chat_id})
+    if settings:
+        return settings.get("enabled", False)
+    return False
+
+def enable_search():
+    await dersdb.update_one({"chat_id": chat_id}, {"$set": {"enabled": True}}, upsert=True)
+
+def disable_search():
+    await dersdb.update_one({"chat_id": chat_id}, {"$set": {"enabled": False}}, upsert=True)
+
+
 async def get_assistant_number(chat_id: int) -> str:
     assistant = assistantdict.get(chat_id)
     return assistant
