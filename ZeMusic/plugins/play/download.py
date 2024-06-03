@@ -9,34 +9,7 @@ from youtube_search import YoutubeSearch
 from ZeMusic import app
 from ZeMusic.plugins.play.filters import command
 import config
-
-stiklok =[]
-
-@app.on_message(command(["قفل البحث","تعطيل البحث"]))
-async def block_stickers(client:Client, message:Message):
-    get = await client.get_chat_member(message.chat.id, message.from_user.id)
-    if get.status in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR]:
-        if message.chat.id in stiklok:
-            return await message.reply_text(f"البحث مقفل من قبل")
-        stiklok.append(message.chat.id)
-        return await message.reply_text(f"تم قفل البحث \n\n من قبل ←{message.from_user.mention}")
-    else:
-        return await message.reply_text(f"الامر يخص المشرف")
-    
-
-@app.on_message(filters.command(["فتح البحث","تفعيل البحث"]))
-async def block_stickers(client:Client, message:Message):
-    get = await client.get_chat_member(message.chat.id, message.from_user.id)
-    if get.status in ["creator", "administrator"]:
-        if message.chat.id in stiklok:
-            return await message.reply_text(f"البحث مقفل من قبل")
-        stiklok.append(message.chat.id)
-        return await message.reply_text(f"تم قفل البحث \n\n من قبل ←{message.from_user.mention}")
-    else:
-        return await message.reply_text(f"الامر يخص المشرف")
-    
-
-
+from ZeMusic.utils.database import is_search_enabled, enable_search, disable_search
 
 def remove_if_exists(path):
     if os.path.exists(path):
@@ -46,10 +19,10 @@ Nem = config.BOT_NAME + " ابحث"
 
 @app.on_message(command(["/song", "تحميل", "بحث", Nem]))
 async def song_downloader(client, message: Message):
-    global is_search_enabled
-    if not is_search_enabled:
+    if not is_search_enabled():
         await message.reply_text("<b>البحث معطل حاليًا.</b>")
         return
+    
     query = " ".join(message.command[1:])
     m = await message.reply_text("<b>⇜ جـارِ البحث عـن المقطـع الصـوتـي . . .</b>")
     ydl_ops = {
@@ -128,14 +101,12 @@ async def song_downloader(client, message: Message):
 
 # أمر لتعطيل البحث
 @app.on_message(command(["تعطيل البحث"]))
-async def disable_search(client, message: Message):
-    global is_search_enabled
-    is_search_enabled = False
+async def disable_search_command(client, message: Message):
+    disable_search()
     await message.reply_text("<b>تم تعطيل البحث بنجاح.</b>")
 
 # أمر لتفعيل البحث
 @app.on_message(command(["تفعيل البحث"]))
-async def enable_search(client, message: Message):
-    global is_search_enabled
-    is_search_enabled = True
+async def enable_search_command(client, message: Message):
+    enable_search()
     await message.reply_text("<b>تم تفعيل البحث بنجاح.</b>")
