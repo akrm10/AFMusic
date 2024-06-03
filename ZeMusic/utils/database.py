@@ -42,7 +42,7 @@ skipmode = {}
 
 
 async def is_search_enabled():
-    settings = dersdb.find_one({"chat_id": chat_id})
+    settings = await dersdb.find_one({"chat_id": chat_id})
     if settings:
         return settings.get("enabled", False)
     return False
