@@ -9,6 +9,7 @@ from youtube_search import YoutubeSearch
 from ZeMusic import app
 from ZeMusic.plugins.play.filters import command
 import config
+from io import BytesIO
 
 def remove_if_exists(path):
     if os.path.exists(path):
@@ -64,25 +65,27 @@ async def song_downloader(client, message: Message):
             secmul *= 60
         
         await m.edit("<b>⇜ جـارِ التحميل ▬▬ . . .</b>")
+
+        # قراءة الملف الصوتي إلى BytesIO بشكل غير متزامن
+        audio_data = BytesIO()
+        async with aiofiles.open(audio_file, mode='rb') as af:
+            content = await af.read()
+            audio_data.write(content)
+        audio_data.seek(0)
         
-        # التأكد من وجود الملف الصوتي قبل الإرسال
-        if os.path.exists(audio_file):
-            try:
-                await message.reply_audio(
-                    audio=audio_file,
-                    caption=rep,
-                    title=title,
-                    performer=host,
-                    thumb=thumb_name,
-                    duration=dur,
-                )
-                await m.delete()
-            except Exception as e:
-                await m.edit("حدث خطأ أثناء إرسال الملف الصوتي. يرجى المحاولة مرة أخرى لاحقًا.")
-                print(f"Error while sending audio file: {e}")
-        else:
-            await m.edit("حدث خطأ أثناء تحميل الملف الصوتي. لم يتم العثور على الملف.")
-            print("Audio file not found after download.")
+        try:
+            await message.reply_audio(
+                audio=audio_data,
+                caption=rep,
+                title=title,
+                performer=host,
+                thumb=thumb_name,
+                duration=dur,
+            )
+            await m.delete()
+        except Exception as e:
+            await m.edit("حدث خطأ أثناء إرسال الملف الصوتي. يرجى المحاولة مرة أخرى لاحقًا.")
+            print(f"Error while sending audio file: {e}")
 
     except Exception as e:
         await m.edit("حدث خطأ أثناء تحميل الملف الصوتي. يرجى المحاولة مرة أخرى لاحقًا.")
