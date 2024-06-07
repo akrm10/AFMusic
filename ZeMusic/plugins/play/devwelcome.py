@@ -1,4 +1,4 @@
-from pyrogram import Client
+"""from pyrogram import Client
 from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton
 from ZeMusic import app
 import os
@@ -22,3 +22,4 @@ async def WelcomeDev(_, response: ChatMemberUpdated):
             caption=f"ـ {name} دخل الشات.\nـ {bio}"
         )
     
+"""
