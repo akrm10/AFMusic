@@ -66,9 +66,9 @@ async def get_thumb(videoid):
         enhancer = ImageEnhance.Brightness(background)
         background = enhancer.enhance(0.5)
 
-        # Make the thumbnail circular
+        # Make the thumbnail circular and increase its size by 10%
         circular_image = youtube.convert("RGBA")
-        circular_image = changeImageSize(350, 350, circular_image)  # Resize to 350x350
+        circular_image = changeImageSize(385, 385, circular_image)  # Resize to 385x385 (10% larger)
 
         # Create a mask to make the image circular
         mask = Image.new("L", circular_image.size, 0)
@@ -78,20 +78,25 @@ async def get_thumb(videoid):
         # Apply the mask to the circular image
         circular_image.putalpha(mask)
 
+        # Calculate the center position for the circular image
+        center_x = (1280 - circular_image.size[0]) // 2
+        center_y = (720 - circular_image.size[1]) // 2 - 100  # Adjust Y position as needed
+
         # Paste the circular image onto the background
-        background.paste(circular_image, (50, 50), circular_image)  # Change position as needed
+        background.paste(circular_image, (center_x, center_y), circular_image)
 
         draw = ImageDraw.Draw(background)
         font_large = ImageFont.truetype("ZeMusic/assets/font.ttf", 50)
         font_medium = ImageFont.truetype("ZeMusic/assets/font2.ttf", 35)
         font_small = ImageFont.truetype("ZeMusic/assets/font2.ttf", 30)
 
-        # Add the text to the image
-        draw.text((430, 50), "AFROTOO MUSIC", fill="white", font=font_large)
-        draw.text((430, 150), "Aghs Lab Safety Rap", fill="white", font=font_medium)
-        draw.text((430, 250), f"Views: {views}", fill="white", font=font_small)
-        draw.text((430, 300), f"Duration: {duration}", fill="white", font=font_small)
-        draw.text((430, 350), f"Channel: {channel}", fill="white", font=font_small)
+        # Calculate the center positions for the text
+        text_start_y = center_y + circular_image.size[1] + 20
+        draw.text((center_x, text_start_y), "AFROTOO MUSIC", fill="white", font=font_large, anchor="ms")
+        draw.text((center_x, text_start_y + 60), "Aghs Lab Safety Rap", fill="white", font=font_medium, anchor="ms")
+        draw.text((center_x, text_start_y + 110), f"Views: {views}", fill="white", font=font_small, anchor="ms")
+        draw.text((center_x, text_start_y + 160), f"Duration: {duration}", fill="white", font=font_small, anchor="ms")
+        draw.text((center_x, text_start_y + 210), f"Channel: {channel}", fill="white", font=font_small, anchor="ms")
 
         try:
             os.remove(f"cache/thumb{videoid}.png")
