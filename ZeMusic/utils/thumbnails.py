@@ -1,6 +1,5 @@
 import os
 import re
-
 import aiofiles
 import aiohttp
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
@@ -72,44 +71,37 @@ async def get_thumb(videoid):
         background = enhancer.enhance(0.5)
         draw = ImageDraw.Draw(background)
         arial = ImageFont.truetype("ZeMusic/assets/font2.ttf", 30)
-        font = ImageFont.truetype("ZeMusic/assets/font.ttf", 30)
-        draw.text((1110, 8), unidecode(app.name), fill="white", font=arial)
+        font = ImageFont.truetype("ZeMusic/assets/font.ttf", 40)  # Adjusted font size for better visibility
+
+        # Drawing the text on the image
+        draw.text((30, 30), "AFROTOO MUSIC", fill="white", font=arial)  # Application name at top left
         draw.text(
-            (55, 560),
-            f"{channel} | {views[:23]}",
+            (30, 650),
+            f"{channel} | {views}",
             (255, 255, 255),
             font=arial,
         )
         draw.text(
-            (57, 600),
+            (30, 700),
             clear(title),
             (255, 255, 255),
             font=font,
         )
-        draw.line(
-            [(55, 660), (1220, 660)],
-            fill="white",
-            width=5,
-            joint="curve",
-        )
-        draw.ellipse(
-            [(918, 648), (942, 672)],
-            outline="white",
-            fill="white",
-            width=15,
-        )
+        draw.rectangle([(28, 748), (1252, 760)], fill="white")  # Drawing a white line
+        draw.ellipse([(1220, 720), (1260, 760)], outline="white", fill="white")  # Drawing a white circle
         draw.text(
-            (36, 685),
+            (30, 770),
             "00:00",
             (255, 255, 255),
             font=arial,
         )
         draw.text(
-            (1185, 685),
-            f"{duration[:23]}",
+            (1180, 770),
+            f"{duration}",
             (255, 255, 255),
             font=arial,
         )
+
         try:
             os.remove(f"cache/thumb{videoid}.png")
         except:
