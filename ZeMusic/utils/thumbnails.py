@@ -112,7 +112,7 @@ async def get_thumb(videoid):
         image4.text((680, 500), text=duration_text, fill="white", font=font4, align="left")
         image4.text((680, 550), text=channel_text, fill="white", font=font4, align="left")
 
-        image2 = ImageOps.expand(image2, border=20, fill=make_col())
+        image2 = ImageOps.expand(image2, border=10, fill=make_col())
         image2 = image2.convert("RGB")
         image2.save(f"cache/{videoid}.jpg")
         file = f"cache/{videoid}.jpg"
