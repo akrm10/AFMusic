@@ -91,13 +91,18 @@ async def get_thumb(videoid):
         font_medium = ImageFont.truetype("ZeMusic/assets/font2.ttf", 35)
         font_small = ImageFont.truetype("ZeMusic/assets/font2.ttf", 30)
 
-        # Add the text to the image
+        # Calculate text positions
         text_x = 500  # Adjust X position as needed
-        draw.text((text_x, 50), "AFROTOO MUSIC", fill="white", font=font_large)
-        draw.text((text_x, 150), "Aghs Lab Safety Rap", fill="white", font=font_medium)
-        draw.text((text_x, 250), f"Views: {views}", fill="white", font=font_small)
-        draw.text((text_x, 300), f"Duration: {duration}", fill="white", font=font_small)
-        draw.text((text_x, 350), f"Channel: {channel}", fill="white", font=font_small)
+        text_y_large = 50
+        text_y_medium = 150
+        text_y_small = 250
+
+        # Add the text to the image
+        draw.text((text_x, text_y_large), "AFROTOO MUSIC", fill="white", font=font_large)
+        draw.text((text_x, text_y_medium), "Aghs Lab Safety Rap", fill="white", font=font_medium)
+        draw.text((text_x, text_y_small), f"Views: {views}", fill="white", font=font_small)
+        draw.text((text_x, text_y_small + 50), f"Duration: {duration}", fill="white", font=font_small)
+        draw.text((text_x, text_y_small + 100), f"Channel: {channel}", fill="white", font=font_small)
 
         try:
             os.remove(f"cache/thumb{videoid}.png")
