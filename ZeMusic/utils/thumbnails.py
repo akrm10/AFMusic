@@ -1,8 +1,6 @@
 import asyncio
 import os
-import random
 import re
-import textwrap
 import aiofiles
 import aiohttp
 from PIL import (Image, ImageDraw, ImageEnhance, ImageFilter,
@@ -10,9 +8,6 @@ from PIL import (Image, ImageDraw, ImageEnhance, ImageFilter,
 from youtubesearchpython.__future__ import VideosSearch
 import numpy as np
 from config import YOUTUBE_IMG_URL
-
-def make_col():
-    return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
 def changeImageSize(maxWidth, maxHeight, image):
     widthRatio = maxWidth / image.size[0]
@@ -86,7 +81,14 @@ async def get_thumb(videoid):
         final_img_arr = np.dstack((img_arr, lum_img_arr))
         circular_thumb = Image.fromarray(final_img_arr).resize((600, 600))
 
-        image2.paste(circular_thumb, (50, 70), mask=circular_thumb)
+        # Create colored circular background
+        circle = Image.new("RGBA", (620, 620), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(circle)
+        draw.ellipse((0, 0, 620, 620), fill=(255, 34, 67, 95))  # استخدام اللون المحدد
+
+        # Paste the background and then the circular thumbnail
+        image2.paste(circle, (45, 65), mask=circle)
+        image2.paste(circular_thumb, (60, 80), mask=circular_thumb)
 
         # fonts
         font1 = ImageFont.truetype("ZeMusic/assets/font.ttf", 30)
@@ -95,7 +97,7 @@ async def get_thumb(videoid):
         font4 = ImageFont.truetype("ZeMusic/assets/font2.ttf", 35)
 
         image4 = ImageDraw.Draw(image2)
-        image4.text((20, 10), "DIL[AAROHI] x MUSIC", fill="white", font=font1, align="left")
+        image4.text((20, 10), "KING MUSIC", fill="white", font=font1, align="left")
         image4.text((680, 150), "NOW PLAYING", fill="white", font=font2, stroke_width=2, stroke_fill="white", align="left")
 
         # title
