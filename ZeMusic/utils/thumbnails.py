@@ -12,7 +12,12 @@ from PIL import (Image, ImageDraw, ImageEnhance, ImageFilter,
 from youtubesearchpython.__future__ import VideosSearch
 import numpy as np
 from config import YOUTUBE_IMG_URL
-
+A = "De"
+B = "ꪜ : @"
+D = "IC"
+E = "_"
+V = "19"
+DEV = A+B+D+E+V
 def make_col():
     return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
@@ -97,7 +102,7 @@ async def get_thumb(videoid):
         font4 = ImageFont.truetype("ZeMusic/assets/font2.ttf", 35)
 
         image4 = ImageDraw.Draw(image2)
-        image4.text((20, 10), unidecode(app.name), fill="white", font=font1, align="left")
+        image4.text((20, 10), f" {DEV}", fill="white", font=font1, align="left")
         image4.text((680, 150), "KING MUSIC", fill="white", font=font2, stroke_width=2, stroke_fill="white", align="left")
 
         # title
