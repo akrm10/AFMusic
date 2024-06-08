@@ -66,10 +66,9 @@ async def get_thumb(videoid):
         enhancer = ImageEnhance.Brightness(background)
         background = enhancer.enhance(0.5)
 
-        # Load the circular image
-        circular_image_path = "/mnt/data/IMG_20240608_144121_115.jpg"
-        circular_image = Image.open(circular_image_path).convert("RGBA")
-        circular_image = changeImageSize(200, 200, circular_image)  # Resize if needed
+        # Make the thumbnail circular
+        circular_image = youtube.convert("RGBA")
+        circular_image = changeImageSize(350, 350, circular_image)  # Resize to 350x350
 
         # Create a mask to make the image circular
         mask = Image.new("L", circular_image.size, 0)
@@ -80,48 +79,20 @@ async def get_thumb(videoid):
         circular_image.putalpha(mask)
 
         # Paste the circular image onto the background
-        background.paste(circular_image, (100, 100), circular_image)  # Change position as needed
+        background.paste(circular_image, (50, 50), circular_image)  # Change position as needed
 
         draw = ImageDraw.Draw(background)
-        arial = ImageFont.truetype("ZeMusic/assets/font2.ttf", 30)
-        font = ImageFont.truetype("ZeMusic/assets/font.ttf", 30)
-        draw.text((1110, 8), unidecode(app.name), fill="white", font=arial)
-        draw.text(
-            (55, 560),
-            f"{channel} | {views[:23]}",
-            (255, 255, 255),
-            font=arial,
-        )
-        draw.text(
-            (57, 600),
-            clear(title),
-            (255, 255, 255),
-            font=font,
-        )
-        draw.line(
-            [(55, 660), (1220, 660)],
-            fill="white",
-            width=5,
-            joint="curve",
-        )
-        draw.ellipse(
-            [(918, 648), (942, 672)],
-            outline="white",
-            fill="white",
-            width=15,
-        )
-        draw.text(
-            (36, 685),
-            "00:00",
-            (255, 255, 255),
-            font=arial,
-        )
-        draw.text(
-            (1185, 685),
-            f"{duration[:23]}",
-            (255, 255, 255),
-            font=arial,
-        )
+        font_large = ImageFont.truetype("ZeMusic/assets/font.ttf", 50)
+        font_medium = ImageFont.truetype("ZeMusic/assets/font2.ttf", 35)
+        font_small = ImageFont.truetype("ZeMusic/assets/font2.ttf", 30)
+
+        # Add the text to the image
+        draw.text((430, 50), "AFROTOO MUSIC", fill="white", font=font_large)
+        draw.text((430, 150), "Aghs Lab Safety Rap", fill="white", font=font_medium)
+        draw.text((430, 250), f"Views: {views}", fill="white", font=font_small)
+        draw.text((430, 300), f"Duration: {duration}", fill="white", font=font_small)
+        draw.text((430, 350), f"Channel: {channel}", fill="white", font=font_small)
+
         try:
             os.remove(f"cache/thumb{videoid}.png")
         except:
