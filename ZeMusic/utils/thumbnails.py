@@ -77,35 +77,16 @@ async def get_thumb(videoid):
         background = enhancer.enhance(0.6)
         image2 = background
 
-        # Define or load the `circle` image here
-        circle = Image.new("RGBA", (720, 720), (255, 255, 255, 0))
-        draw = ImageDraw.Draw(circle)
-        draw.ellipse((0, 0, 720, 720), fill=(255, 255, 255, 255))
-
-        # changing circle color
-        im = circle
-        im = im.convert("RGBA")
-        color = make_col()
-        data = np.array(im)
-        red, green, blue, alpha = data.T
-        white_areas = (red == 255) & (blue == 255) & (green == 255)
-        data[..., :-1][white_areas.T] = color
-        im2 = Image.fromarray(data)
-        circle = im2
-        # done
-
-        image3 = image1.crop((280, 0, 1000, 720))
+        # Create circular thumbnail
         lum_img = Image.new("L", [720, 720], 0)
         draw = ImageDraw.Draw(lum_img)
         draw.pieslice([(0, 0), (720, 720)], 0, 360, fill=255, outline="white")
-        img_arr = np.array(image3)
+        img_arr = np.array(image1.crop((280, 0, 1000, 720)))
         lum_img_arr = np.array(lum_img)
         final_img_arr = np.dstack((img_arr, lum_img_arr))
-        image3 = Image.fromarray(final_img_arr)
-        image3 = image3.resize((600, 600))
+        circular_thumb = Image.fromarray(final_img_arr).resize((600, 600))
 
-        image2.paste(image3, (50, 70), mask=image3)
-        image2.paste(circle, (0, 0), mask=circle)
+        image2.paste(circular_thumb, (50, 70), mask=circular_thumb)
 
         # fonts
         font1 = ImageFont.truetype("ZeMusic/assets/font.ttf", 30)
@@ -114,27 +95,27 @@ async def get_thumb(videoid):
         font4 = ImageFont.truetype("ZeMusic/assets/font2.ttf", 35)
 
         image4 = ImageDraw.Draw(image2)
-        image4.text((10, 10), "DIL[AAROHI] x MUSIC", fill="white", font=font1, align="left")
-        image4.text((670, 150), "NOW PLAYING", fill="white", font=font2, stroke_width=2, stroke_fill="white", align="left")
+        image4.text((20, 10), "DIL[AAROHI] x MUSIC", fill="white", font=font1, align="left")
+        image4.text((680, 150), "NOW PLAYING", fill="white", font=font2, stroke_width=2, stroke_fill="white", align="left")
 
         # title
         title1 = truncate(title)
-        image4.text((670, 300), text=title1[0], fill="white", stroke_width=1, stroke_fill="white", font=font3, align="left")
-        image4.text((670, 350), text=title1[1], fill="white", stroke_width=1, stroke_fill="white", font=font3, align="left")
+        image4.text((680, 300), text=title1[0], fill="white", stroke_width=1, stroke_fill="white", font=font3, align="left")
+        image4.text((680, 350), text=title1[1], fill="white", stroke_width=1, stroke_fill="white", font=font3, align="left")
 
         # description
-        views = f"Views : {views}"
-        duration = f"Duration : {duration} Mins"
-        channel = f"Channel : {channel}"
+        views_text = f"Views : {views}"
+        duration_text = f"Duration : {duration} Mins"
+        channel_text = f"Channel : {channel}"
 
-        image4.text((670, 450), text=views, fill="white", font=font4, align="left")
-        image4.text((670, 500), text=duration, fill="white", font=font4, align="left")
-        image4.text((670, 550), text=channel, fill="white", font=font4, align="left")
+        image4.text((680, 450), text=views_text, fill="white", font=font4, align="left")
+        image4.text((680, 500), text=duration_text, fill="white", font=font4, align="left")
+        image4.text((680, 550), text=channel_text, fill="white", font=font4, align="left")
 
         image2 = ImageOps.expand(image2, border=20, fill=make_col())
         image2 = image2.convert("RGB")
         image2.save(f"cache/{videoid}.jpg")
-        file = f"cache/{videoid}.jpg"
+        file = f"cache/{videoid}.jpg")
         return file
     except Exception as e:
         print(e)
