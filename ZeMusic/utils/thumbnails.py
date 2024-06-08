@@ -78,25 +78,26 @@ async def get_thumb(videoid):
         # Apply the mask to the circular image
         circular_image.putalpha(mask)
 
-        # Calculate the center position for the circular image
-        center_x = (1280 - circular_image.size[0]) // 2
-        center_y = (720 - circular_image.size[1]) // 2 - 100  # Adjust Y position as needed
+        # Draw pink border around the circular image
+        border_size = 10
+        circular_image_with_border = Image.new("RGBA", (circular_image.size[0] + border_size * 2, circular_image.size[1] + border_size * 2), (255, 192, 203, 255))
+        circular_image_with_border.paste(circular_image, (border_size, border_size), circular_image)
 
         # Paste the circular image onto the background
-        background.paste(circular_image, (center_x, center_y), circular_image)
+        background.paste(circular_image_with_border, (50, 50), circular_image_with_border)
 
         draw = ImageDraw.Draw(background)
         font_large = ImageFont.truetype("ZeMusic/assets/font.ttf", 50)
         font_medium = ImageFont.truetype("ZeMusic/assets/font2.ttf", 35)
         font_small = ImageFont.truetype("ZeMusic/assets/font2.ttf", 30)
 
-        # Calculate the center positions for the text
-        text_start_y = center_y + circular_image.size[1] + 20
-        draw.text((center_x, text_start_y), "AFROTOO MUSIC", fill="white", font=font_large, anchor="ms")
-        draw.text((center_x, text_start_y + 60), "Aghs Lab Safety Rap", fill="white", font=font_medium, anchor="ms")
-        draw.text((center_x, text_start_y + 110), f"Views: {views}", fill="white", font=font_small, anchor="ms")
-        draw.text((center_x, text_start_y + 160), f"Duration: {duration}", fill="white", font=font_small, anchor="ms")
-        draw.text((center_x, text_start_y + 210), f"Channel: {channel}", fill="white", font=font_small, anchor="ms")
+        # Add the text to the image
+        text_x = 500  # Adjust X position as needed
+        draw.text((text_x, 50), "AFROTOO MUSIC", fill="white", font=font_large)
+        draw.text((text_x, 150), "Aghs Lab Safety Rap", fill="white", font=font_medium)
+        draw.text((text_x, 250), f"Views: {views}", fill="white", font=font_small)
+        draw.text((text_x, 300), f"Duration: {duration}", fill="white", font=font_small)
+        draw.text((text_x, 350), f"Channel: {channel}", fill="white", font=font_small)
 
         try:
             os.remove(f"cache/thumb{videoid}.png")
