@@ -97,7 +97,7 @@ async def get_thumb(videoid):
         font4 = ImageFont.truetype("ZeMusic/assets/font2.ttf", 35)
 
         image4 = ImageDraw.Draw(image2)
-        image4.text((20, 10), f"{app.mention}", fill="white", font=font1, align="left")
+        image4.text((20, 10), f" {app.name}", fill="white", font=font1, align="left")
         image4.text((680, 150), "KING MUSIC", fill="white", font=font2, stroke_width=2, stroke_fill="white", align="left")
 
         # title
