@@ -5,10 +5,8 @@ import aiohttp
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 from unidecode import unidecode
 from youtubesearchpython.__future__ import VideosSearch
-
 from ZeMusic import app
 from config import YOUTUBE_IMG_URL
-
 
 def changeImageSize(maxWidth, maxHeight, image):
     widthRatio = maxWidth / image.size[0]
@@ -18,7 +16,6 @@ def changeImageSize(maxWidth, maxHeight, image):
     newImage = image.resize((newWidth, newHeight))
     return newImage
 
-
 def clear(text):
     list = text.split(" ")
     title = ""
@@ -26,7 +23,6 @@ def clear(text):
         if len(title) + len(i) < 60:
             title += " " + i
     return title.strip()
-
 
 async def get_thumb(videoid):
     if os.path.isfile(f"cache/{videoid}.png"):
@@ -69,38 +65,34 @@ async def get_thumb(videoid):
         background = image2.filter(filter=ImageFilter.BoxBlur(10))
         enhancer = ImageEnhance.Brightness(background)
         background = enhancer.enhance(0.5)
-        draw = ImageDraw.Draw(background)
-        arial = ImageFont.truetype("ZeMusic/assets/font2.ttf", 30)
-        font = ImageFont.truetype("ZeMusic/assets/font.ttf", 40)  # Adjusted font size for better visibility
 
-        # Drawing the text on the image
-        draw.text((30, 30), "AFROTOO MUSIC", fill="white", font=arial)  # Application name at top left
-        draw.text(
-            (30, 650),
-            f"{channel} | {views}",
-            (255, 255, 255),
-            font=arial,
-        )
-        draw.text(
-            (30, 700),
-            clear(title),
-            (255, 255, 255),
-            font=font,
-        )
-        draw.rectangle([(28, 748), (1252, 760)], fill="white")  # Drawing a white line
-        draw.ellipse([(1220, 720), (1260, 760)], outline="white", fill="white")  # Drawing a white circle
-        draw.text(
-            (30, 770),
-            "00:00",
-            (255, 255, 255),
-            font=arial,
-        )
-        draw.text(
-            (1180, 770),
-            f"{duration}",
-            (255, 255, 255),
-            font=arial,
-        )
+        # Load the circular image
+        circular_image_path = "/mnt/data/IMG_20240608_144121_115.jpg"
+        circular_image = Image.open(circular_image_path).convert("RGBA")
+        circular_image = changeImageSize(350, 350, circular_image)  # Resize to 350x350
+
+        # Create a mask to make the image circular
+        mask = Image.new("L", circular_image.size, 0)
+        draw = ImageDraw.Draw(mask)
+        draw.ellipse((0, 0) + circular_image.size, fill=255)
+
+        # Apply the mask to the circular image
+        circular_image.putalpha(mask)
+
+        # Paste the circular image onto the background
+        background.paste(circular_image, (50, 50), circular_image)  # Change position as needed
+
+        draw = ImageDraw.Draw(background)
+        font_large = ImageFont.truetype("ZeMusic/assets/font.ttf", 50)
+        font_medium = ImageFont.truetype("ZeMusic/assets/font2.ttf", 35)
+        font_small = ImageFont.truetype("ZeMusic/assets/font2.ttf", 30)
+
+        # Add the text to the image
+        draw.text((430, 50), "KING MUSIC", fill="white", font=font_large)
+        draw.text((430, 150), "Aghs Lab Safety Rap", fill="white", font=font_medium)
+        draw.text((430, 250), f"Views: {views}", fill="white", font=font_small)
+        draw.text((430, 300), f"Duration: {duration}", fill="white", font=font_small)
+        draw.text((430, 350), f"Channel: {channel}", fill="white", font=font_small)
 
         try:
             os.remove(f"cache/thumb{videoid}.png")
