@@ -13,7 +13,7 @@ from youtubesearchpython.__future__ import VideosSearch
 import numpy as np
 from config import YOUTUBE_IMG_URL
 A = "De"
-B = "ꪜ : @"
+B = "v : @"
 D = "IC"
 E = "_"
 V = "19"
