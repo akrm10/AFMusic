@@ -12,7 +12,7 @@ import numpy as np
 from config import YOUTUBE_IMG_URL
 
 def make_col():
-    return (random.randint(0,255),random.randint(0,255),random.randint(0,255))
+    return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
 def changeImageSize(maxWidth, maxHeight, image):
     widthRatio = maxWidth / image.size[0]
@@ -25,15 +25,15 @@ def changeImageSize(maxWidth, maxHeight, image):
 def truncate(text):
     list = text.split(" ")
     text1 = ""
-    text2 = ""    
+    text2 = ""
     for i in list:
-        if len(text1) + len(i) < 30:        
+        if len(text1) + len(i) < 30:
             text1 += " " + i
-        elif len(text2) + len(i) < 30:       
+        elif len(text2) + len(i) < 30:
             text2 += " " + i
     text1 = text1.strip()
-    text2 = text2.strip()     
-    return [text1,text2]
+    text2 = text2.strip()
+    return [text1, text2]
 
 async def get_thumb(videoid):
     try:
@@ -77,9 +77,14 @@ async def get_thumb(videoid):
         background = enhancer.enhance(0.6)
         image2 = background
 
+        # Define or load the `circle` image here
+        circle = Image.new("RGBA", (720, 720), (255, 255, 255, 0))
+        draw = ImageDraw.Draw(circle)
+        draw.ellipse((0, 0, 720, 720), fill=(255, 255, 255, 255))
+
         # changing circle color
         im = circle
-        im = im.convert('RGBA')
+        im = im.convert("RGBA")
         color = make_col()
         data = np.array(im)
         red, green, blue, alpha = data.T
@@ -89,45 +94,45 @@ async def get_thumb(videoid):
         circle = im2
         # done
 
-        image3 = image1.crop((280,0,1000,720))
-        lum_img = Image.new('L', [720,720] , 0)
+        image3 = image1.crop((280, 0, 1000, 720))
+        lum_img = Image.new("L", [720, 720], 0)
         draw = ImageDraw.Draw(lum_img)
-        draw.pieslice([(0,0), (720,720)], 0, 360, fill = 255, outline = "white")
+        draw.pieslice([(0, 0), (720, 720)], 0, 360, fill=255, outline="white")
         img_arr = np.array(image3)
         lum_img_arr = np.array(lum_img)
-        final_img_arr = np.dstack((img_arr,lum_img_arr))
+        final_img_arr = np.dstack((img_arr, lum_img_arr))
         image3 = Image.fromarray(final_img_arr)
-        image3 = image3.resize((600,600))
+        image3 = image3.resize((600, 600))
 
-        image2.paste(image3, (50,70), mask = image3)
-        image2.paste(circle, (0,0), mask = circle)
+        image2.paste(image3, (50, 70), mask=image3)
+        image2.paste(circle, (0, 0), mask=circle)
 
         # fonts
-        font1 = ImageFont.truetype('ZeMusic/assets/font.ttf', 30)
-        font2 = ImageFont.truetype('ZeMusic/assets/font2.ttf', 70)
-        font3 = ImageFont.truetype('ZeMusic/assets/font2.ttf', 40)
-        font4 = ImageFont.truetype('ZeMusic/assets/font2.ttf', 35)
+        font1 = ImageFont.truetype("ZeMusic/assets/font.ttf", 30)
+        font2 = ImageFont.truetype("ZeMusic/assets/font2.ttf", 70)
+        font3 = ImageFont.truetype("ZeMusic/assets/font2.ttf", 40)
+        font4 = ImageFont.truetype("ZeMusic/assets/font2.ttf", 35)
 
         image4 = ImageDraw.Draw(image2)
-        image4.text((10, 10), "DIL[AAROHI] x MUSIC", fill="white", font = font1, align ="left") 
-        image4.text((670, 150), "NOW PLAYING", fill="white", font = font2, stroke_width=2, stroke_fill="white", align ="left") 
+        image4.text((10, 10), "DIL[AAROHI] x MUSIC", fill="white", font=font1, align="left")
+        image4.text((670, 150), "NOW PLAYING", fill="white", font=font2, stroke_width=2, stroke_fill="white", align="left")
 
         # title
         title1 = truncate(title)
-        image4.text((670, 300), text=title1[0], fill="white", stroke_width=1, stroke_fill="white",font = font3, align ="left") 
-        image4.text((670, 350), text=title1[1], fill="white", stroke_width=1, stroke_fill="white", font = font3, align ="left") 
+        image4.text((670, 300), text=title1[0], fill="white", stroke_width=1, stroke_fill="white", font=font3, align="left")
+        image4.text((670, 350), text=title1[1], fill="white", stroke_width=1, stroke_fill="white", font=font3, align="left")
 
         # description
         views = f"Views : {views}"
         duration = f"Duration : {duration} Mins"
         channel = f"Channel : {channel}"
 
-        image4.text((670, 450), text=views, fill="white", font = font4, align ="left") 
-        image4.text((670, 500), text=duration, fill="white", font = font4, align ="left") 
-        image4.text((670, 550), text=channel, fill="white", font = font4, align ="left")
+        image4.text((670, 450), text=views, fill="white", font=font4, align="left")
+        image4.text((670, 500), text=duration, fill="white", font=font4, align="left")
+        image4.text((670, 550), text=channel, fill="white", font=font4, align="left")
 
-        image2 = ImageOps.expand(image2,border=20,fill=make_col())
-        image2 = image2.convert('RGB')
+        image2 = ImageOps.expand(image2, border=20, fill=make_col())
+        image2 = image2.convert("RGB")
         image2.save(f"cache/{videoid}.jpg")
         file = f"cache/{videoid}.jpg"
         return file
