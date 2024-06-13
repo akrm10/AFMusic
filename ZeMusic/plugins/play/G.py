@@ -11,16 +11,13 @@ from youtube_search import YoutubeSearch
 
 from ZeMusic import app
 from ZeMusic.plugins.play.filters import command
-import config
 
 def remove_if_exists(path):
     if os.path.exists(path):
         os.remove(path)
 
-lnk = "https://t.me/" + config.CHANNEL_LINK
-Nem = config.BOT_NAME + " ابحث"
 
-@app.on_message(command(["song", "/song", "بحث", Nem]))
+@app.on_message(command(["song", "/song", "بحث"]))
 async def song_downloader(client, message: Message):
     query = " ".join(message.command[1:])
     m = await message.reply_text("<b>⇜ جـارِ البحث ..</b>")
@@ -71,14 +68,6 @@ async def song_downloader(client, message: Message):
             performer=host,
             thumb=thumb_name,
             duration=dur,
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text=config.CHANNEL_NAME, url=lnk),
-                    ],
-                ]
-            ),
         )
         await m.delete()
     except Exception as e:
