@@ -25,12 +25,12 @@ async def song_downloader(client, message: Message):
     query = " ".join(message.command[1:])
     m = await message.reply_text("<b>⇜ جـارِ البحث ..</b>")
     ydl_ops = {
-         format :  bestaudio[ext=m4a] ,
-         keepvideo : False,
-         prefer_ffmpeg : True,
-         geo_bypass : True,
-         outtmpl :  %(title)s.%(ext)s ,
-         quiet : True,
+        'format': 'bestaudio[ext=m4a]',
+        'keepvideo': False,
+        'prefer_ffmpeg': True,
+        'geo_bypass': True,
+        'outtmpl': '%(title)s.%(ext)s',
+        'quiet': True,
     }
 
     try:
