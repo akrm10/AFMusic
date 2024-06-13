@@ -41,17 +41,17 @@ playtype = {}
 skipmode = {}
 
 
-async def is_search_enabled():
-    settings = await dersdb.find_one({"name": "search"})
+async def is_search_enabled(chat_id):
+    settings = await dersdb.find_one({"name": "search", "chat_id": chat_id})
     if settings:
         return settings.get("enabled", False)
     return False
 
-async def enable_search():
-    await dersdb.update_one({"name": "search"}, {"$set": {"enabled": True}}, upsert=True)
+async def enable_search(chat_id):
+    await dersdb.update_one({"name": "search", "chat_id": chat_id}, {"$set": {"enabled": True}}, upsert=True)
 
-async def disable_search():
-    await dersdb.update_one({"name": "search"}, {"$set": {"enabled": False}}, upsert=True)
+async def disable_search(chat_id):
+    await dersdb.update_one({"name": "search", "chat_id": chat_id}, {"$set": {"enabled": False}}, upsert=True)
 
 
 async def get_assistant_number(chat_id: int) -> str:
