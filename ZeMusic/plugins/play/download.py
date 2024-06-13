@@ -22,8 +22,8 @@ Nem = config.BOT_NAME + " ابحث"
 async def song_downloader(client, message: Message):
     chat_id = message.chat.id  # الحصول على معرف الدردشة
     if not await is_search_enabled(chat_id):
-        return
-    
+        return await message.reply_text("⟡ عذراً عزيزي البحث معطل من قبل الادمن")
+  
     query = " ".join(message.command[1:])
     m = await message.reply_text("<b>⇜ جـارِ البحث عـن المقطـع الصـوتـي . . .</b>")
     ydl_ops = {
