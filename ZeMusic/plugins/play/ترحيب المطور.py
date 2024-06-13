@@ -11,14 +11,15 @@ from pyrogram import filters
 
 @app.on_message(filters.new_chat_members)
 async def wel__come(client: Client, message: Message):
-	chatid= message.chat.id
-	await client.send_message(text=f"- انظم المطور {message.from_user.mention}\n│ \n└ʙʏ في {message.chat.title}",chat_id=chatid)
+    chatid = message.chat.id
+    await client.send_message(text=f"- انظم المطور {message.from_user.mention}\n│ \n└ʙʏ في {message.chat.title}", chat_id=chatid)
+
 
 
 @app.on_message(filters.left_chat_member)
 async def good_bye(client: Client, message: Message):
-	chatid= message.chat.id
-	await client.send_message(text=f"- غادر المطور\n│ \n└ʙʏ  {message.from_user.mention} ",chat_id=chatid)
+    chatid= message.chat.id
+    await client.send_message(text=f"- غادر المطور\n│ \n└ʙʏ  {message.from_user.mention} ",chat_id=chatid)
 
 
 
