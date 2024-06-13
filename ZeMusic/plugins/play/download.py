@@ -101,7 +101,8 @@ async def song_downloader(client, message: Message):
         print(f"Error while cleaning up files: {e}")
 
 # أمر لتعطيل البحث
-@app.on_message(command(["تعطيل البحث"]) & filters.user(OWNER_ID))
+@app.on_message(command(["تعطيل البحث"]))
+@AdminActual
 async def disable_search_command(client, message: Message):
     chat_id = message.chat.id  # الحصول على معرف الدردشة
     if not await is_search_enabled(chat_id):
@@ -110,7 +111,8 @@ async def disable_search_command(client, message: Message):
     await disable_search(chat_id)
     await message.reply_text("<b>تم تعطيل البحث بنجاح.</b>")
 
-@app.on_message(command(["تفعيل البحث"]) & filters.user(OWNER_ID))
+@app.on_message(command(["تفعيل البحث"]))
+@AdminActual
 async def enable_search_command(client, message: Message):
     chat_id = message.chat.id  # الحصول على معرف الدردشة
     if await is_search_enabled(chat_id):
