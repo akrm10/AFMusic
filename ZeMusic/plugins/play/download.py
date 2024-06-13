@@ -104,7 +104,7 @@ async def song_downloader(client, message: Message):
 # أمر لتعطيل البحث
 @app.on_message(command(["تعطيل البحث"]))
 @AdminActual
-async def disable_search_command(client, message: Message):
+async def disable_search_command(client, message: Message, _):
     chat_id = message.chat.id  # الحصول على معرف الدردشة
     if not await is_search_enabled(chat_id):
         await message.reply_text("<b>البحث معطل من قبل.</b>")
@@ -114,7 +114,7 @@ async def disable_search_command(client, message: Message):
 
 @app.on_message(command(["تفعيل البحث"]))
 @AdminActual
-async def enable_search_command(client, message: Message):
+async def enable_search_command(client, message: Message, _):
     chat_id = message.chat.id  # الحصول على معرف الدردشة
     if await is_search_enabled(chat_id):
         await message.reply_text("<b>البحث مفعل من قبل.</b>")
