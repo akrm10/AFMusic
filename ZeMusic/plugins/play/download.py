@@ -1,3 +1,4 @@
+"""
 import os
 import aiohttp
 import aiofiles
@@ -116,3 +117,4 @@ async def enable_search_command(client, message: Message):
         return
     await enable_search()
     await message.reply_text("<b>تم تفعيل البحث بنجاح.</b>")
+"""
