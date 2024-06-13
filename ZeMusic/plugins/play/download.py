@@ -20,6 +20,7 @@ Nem = config.BOT_NAME + " ابحث"
 
 @app.on_message(command(["/song", "تحميل", "بحث", Nem]))
 async def song_downloader(client, message: Message):
+    chat_id = message.chat.id  # الحصول على معرف الدردشة
     if not await is_search_enabled(chat_id):
         return
     
@@ -117,4 +118,3 @@ async def enable_search_command(client, message: Message):
         return
     await enable_search(chat_id)
     await message.reply_text("<b>تم تفعيل البحث بنجاح.</b>")
-
