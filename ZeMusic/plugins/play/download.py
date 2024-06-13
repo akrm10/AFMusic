@@ -20,7 +20,7 @@ Nem = config.BOT_NAME + " ابحث"
 
 @app.on_message(command(["/song", "تحميل", "بحث", Nem]))
 async def song_downloader(client, message: Message):
-    if not await is_search_enabled():
+    if not await is_search_enabled(chat_id):
         return
     
     query = " ".join(message.command[1:])
@@ -102,18 +102,19 @@ async def song_downloader(client, message: Message):
 # أمر لتعطيل البحث
 @app.on_message(command(["تعطيل البحث"]) & filters.user(OWNER_ID))
 async def disable_search_command(client, message: Message):
-    if not await is_search_enabled():
+    chat_id = message.chat.id  # الحصول على معرف الدردشة
+    if not await is_search_enabled(chat_id):
         await message.reply_text("<b>البحث معطل من قبل.</b>")
         return
-    await disable_search()
+    await disable_search(chat_id)
     await message.reply_text("<b>تم تعطيل البحث بنجاح.</b>")
 
-# أمر لتفعيل البحث
 @app.on_message(command(["تفعيل البحث"]) & filters.user(OWNER_ID))
 async def enable_search_command(client, message: Message):
-    if await is_search_enabled():
+    chat_id = message.chat.id  # الحصول على معرف الدردشة
+    if await is_search_enabled(chat_id):
         await message.reply_text("<b>البحث مفعل من قبل.</b>")
         return
-    await enable_search()
+    await enable_search(chat_id)
     await message.reply_text("<b>تم تفعيل البحث بنجاح.</b>")
-    
+
