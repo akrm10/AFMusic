@@ -14,5 +14,5 @@ async def WelcomeDev(_, response: ChatMemberUpdated):
         
         await app.send_message(
             chat_id=response.chat.id,
-            caption=f"⟡ وسع وسع المطور {name} دخل الجروب.\n⟡ {bio}")
+            text=f"⟡ وسع وسع المطور {name} دخل الجروب.\n⟡ {bio}")
     
