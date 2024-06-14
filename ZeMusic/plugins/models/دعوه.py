@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 
 @app.on_message(filters.video_chat_started)
 async def brah(client, message):
-    await msg.reply("<b>• فتحوا المكالمه اللي وده يسمعنا صوته يصعد 🦦</b>")
+    await message.reply("<b>• فتحوا المكالمه اللي وده يسمعنا صوته يصعد 🦦</b>")
 
 @app.on_message(filters.video_chat_ended)
 async def brah2(client, message):
