@@ -3,9 +3,10 @@ from pyrogram.types import ChatMemberUpdated
 from ZeMusic import app
 import os
 
-@app.on_chat_member_updated(filters.chat_member_updated(), group=847)
+@app.on_chat_member_updated(group=847)
 async def WelcomeDev(_, response: ChatMemberUpdated):
     dev_id = 5145609515 # حط ايديك هنا
+    # التحقق من أن العضو الجديد هو المطور وحالته الجديدة هي "member"
     if response.new_chat_member.user.id == dev_id and response.new_chat_member.status == "member":
         info = await app.get_chat(dev_id)
         name = info.first_name
