@@ -1,8 +1,7 @@
-from pyrogram import Client
-from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram import Client, filters
+from pyrogram.types import ChatMemberUpdated
 from ZeMusic import app
 import os
-
 
 @app.on_chat_member_updated(filters=lambda _, response: response.new_chat_member, group=847)
 async def WelcomeDev(_, response: ChatMemberUpdated):
@@ -14,5 +13,6 @@ async def WelcomeDev(_, response: ChatMemberUpdated):
         
         await app.send_message(
             chat_id=response.chat.id,
-            text=f"⟡ وسع وسع المطور {name} دخل الجروب.\n⟡ {bio}")
-    
+            text=f"⟡ وسع وسع المطور {name} دخل الجروب.\n⟡ {bio}",
+            reply_to_message_id=response.message.id  # الرد على رسالة الانضمام
+        )
