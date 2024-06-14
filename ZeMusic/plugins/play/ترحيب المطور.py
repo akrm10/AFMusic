@@ -1,10 +1,10 @@
 from pyrogram import Client, filters
-from pyrogram.types import ChatMemberUpdated
+from pyrogram.types import ChatMemberUpdated, Message
 from ZeMusic import app
 import os
 
 @app.on_chat_member_updated(filters=lambda _, response: response.new_chat_member, group=847)
-async def WelcomeDev(_, response: ChatMemberUpdated, message):
+async def WelcomeDev(_, response: ChatMemberUpdated, Message: message):
     dev_id = 6600943153 # حط ايديك هنا
     if response.from_user.id == dev_id:
         info = await app.get_chat(dev_id)
