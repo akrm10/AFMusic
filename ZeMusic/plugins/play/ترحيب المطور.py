@@ -1,17 +1,17 @@
-from pyrogram import Client, filters
-from pyrogram.types import ChatMemberUpdated
+from pyrogram import Client
+from pyrogram.types import ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton
 from ZeMusic import app
 import os
 
-@app.on_chat_member_updated(group=847)
+
+@app.on_chat_member_updated(filters=lambda _, response: response.new_chat_member, group=847)
 async def WelcomeDev(_, response: ChatMemberUpdated):
-    dev_id = 5145609515 # حط ايديك هنا
-    # التحقق من أن العضو الجديد ليس None وأن العضو الجديد هو المطور وحالته الجديدة هي "member"
-    if response.new_chat_member is not None and response.new_chat_member.user.id == dev_id and response.new_chat_member.status == "member":
+    dev_id = 6600943153 # حط ايديك هنا
+    if response.from_user.id == dev_id:
         info = await app.get_chat(dev_id)
         name = info.first_name
+        
         await app.send_message(
             chat_id=response.chat.id,
-            text=f"↢ لقد انضم مطور السورس هنا ♥️ <a href='tg://user?id={dev_id}'>{name}</a> \n يرجي من الاعضاء احترام وجوده ☕🍀",
-            parse_mode="html"
-        )
+            caption=f"⟡ وسع وسع المطور {name} دخل الجروب.\n⟡ {bio}")
+    
