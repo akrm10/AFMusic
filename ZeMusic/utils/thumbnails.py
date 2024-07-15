@@ -5,7 +5,6 @@ import aiofiles
 import aiohttp
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 from unidecode import unidecode
-from youtubesearchpython.__future__ import VideosSearch
 
 from ZeMusic import app
 from config import YOUTUBE_IMG_URL
@@ -39,7 +38,6 @@ async def get_thumb(videoid):
 
     url = f"https://www.youtube.com/watch?v={videoid}"
     try:
-        results = VideosSearch(url, limit=1)
         for result in (await results.next())["result"]:
             try:
                 title = result["title"]
